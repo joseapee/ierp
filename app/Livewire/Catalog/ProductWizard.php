@@ -130,6 +130,12 @@ class ProductWizard extends Component
         }
     }
 
+    public function selectType(string $type): void
+    {
+        $this->type = $type;
+        $this->updatedType();
+    }
+
     public function updatedName(): void
     {
         if (! $this->productId) {
@@ -269,7 +275,14 @@ class ProductWizard extends Component
 
     public function render(): View
     {
+        $allSteps = [1 => 'Type', 2 => 'Details', 3 => 'Inventory', 4 => 'Manufacturing', 5 => 'Pricing', 6 => 'Review'];
+
+        if ($this->type !== 'manufactured') {
+            unset($allSteps[4]);
+        }
+
         return view('livewire.catalog.product-wizard', [
+            'steps' => $allSteps,
             'categories' => Category::where('is_active', true)->orderBy('name')->get(),
             'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
             'units' => UnitOfMeasure::where('is_active', true)->orderBy('name')->get(),

@@ -1,24 +1,24 @@
 {{-- Bootstrap JS --}}
-<script src="{{ asset('vyzor/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('vyzor/libs/bootstrap/js/bootstrap.bundle.min.js') }}" data-navigate-once></script>
 
 {{-- Vyzor default menu --}}
-<script src="{{ asset('vyzor/js/defaultmenu.min.js') }}"></script>
+<script src="{{ asset('vyzor/js/defaultmenu.min.js') }}" data-navigate-once></script>
 
 {{-- Node Waves JS --}}
-<script src="{{ asset('vyzor/libs/node-waves/waves.min.js') }}"></script>
+<script src="{{ asset('vyzor/libs/node-waves/waves.min.js') }}" data-navigate-once></script>
 
 {{-- Sticky JS --}}
-<script src="{{ asset('vyzor/js/sticky.js') }}"></script>
+<script src="{{ asset('vyzor/js/sticky.js') }}" data-navigate-once></script>
 
 {{-- Simplebar JS --}}
-<script src="{{ asset('vyzor/libs/simplebar/simplebar.min.js') }}"></script>
-<script src="{{ asset('vyzor/js/simplebar.js') }}"></script>
+<script src="{{ asset('vyzor/libs/simplebar/simplebar.min.js') }}" data-navigate-once></script>
+<script src="{{ asset('vyzor/js/simplebar.js') }}" data-navigate-once></script>
 
 {{-- Choices JS (enhanced selects) --}}
-<script src="{{ asset('vyzor/libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+<script src="{{ asset('vyzor/libs/choices.js/public/assets/scripts/choices.min.js') }}" data-navigate-once></script>
 
 {{-- Toastify JS --}}
-<script src="{{ asset('vyzor/libs/toastify-js/src/toastify.js') }}"></script>
+<script src="{{ asset('vyzor/libs/toastify-js/src/toastify.js') }}" data-navigate-once></script>
 
 @livewireScripts
 
@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<script>
+<script data-navigate-once>
     /**
      * Re-initialise Bootstrap tooltips on every Livewire SPA navigation.
      */

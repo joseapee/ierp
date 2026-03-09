@@ -5,7 +5,7 @@
 <title>{{ config('app.name', 'iERP') }}@hasSection('title') — @yield('title')@endif</title>
 
 {{-- Vyzor theme config must load before CSS --}}
-<script src="{{ asset('vyzor/js/main.js') }}"></script>
+<script src="{{ asset('vyzor/js/main.js') }}" data-navigate-once></script>
 
 {{-- Bootstrap CSS --}}
 <link id="style" href="{{ asset('vyzor/libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">

@@ -11,21 +11,9 @@
     <div class="card custom-card mb-3">
         <div class="card-body py-3">
             <div class="d-flex justify-content-between align-items-center">
-                @php
-                    $steps = [
-                        1 => 'Type',
-                        2 => 'Details',
-                        3 => 'Inventory',
-                        4 => 'Manufacturing',
-                        5 => 'Pricing',
-                        6 => 'Review',
-                    ];
-                @endphp
                 @foreach($steps as $num => $label)
-                    @if($num === 4 && $type !== 'manufactured')
-                        @continue
-                    @endif
-                    <div class="d-flex align-items-center gap-2 {{ $num < $currentStep ? 'text-success' : ($num === $currentStep ? 'text-primary fw-bold' : 'text-muted') }}"
+                    <div wire:key="step-indicator-{{ $num }}"
+                         class="d-flex align-items-center gap-2 {{ $num < $currentStep ? 'text-success' : ($num === $currentStep ? 'text-primary fw-bold' : 'text-muted') }}"
                          style="cursor: {{ $num < $currentStep ? 'pointer' : 'default' }}"
                          @if($num < $currentStep) wire:click="goToStep({{ $num }})" @endif>
                         <span class="avatar avatar-xs avatar-rounded {{ $num < $currentStep ? 'bg-success' : ($num === $currentStep ? 'bg-primary' : 'bg-light') }}">
@@ -47,9 +35,10 @@
 
     {{-- Step 1: Type Selection --}}
     @if($currentStep === 1)
-    <div class="card custom-card">
+    <div wire:key="step-1" class="card custom-card">
         <div class="card-header"><div class="card-title">Select Product Type</div></div>
         <div class="card-body">
+            @error('type') <div class="alert alert-danger mb-3">{{ $message }}</div> @enderror
             <div class="row g-3">
                 @php
                     $types = [
@@ -61,9 +50,9 @@
                     ];
                 @endphp
                 @foreach($types as $value => $info)
-                <div class="col-md-4 col-lg">
+                <div class="col-md-4 col-lg" wire:key="type-card-{{ $value }}">
                     <div class="card border {{ $type === $value ? 'border-primary shadow-sm' : '' }}"
-                         style="cursor:pointer" wire:click="$set('type', '{{ $value }}')">
+                         style="cursor:pointer" wire:click="selectType('{{ $value }}')">
                         <div class="card-body text-center py-4">
                             <i class="{{ $info['icon'] }} fs-1 {{ $type === $value ? 'text-primary' : 'text-muted' }}"></i>
                             <h6 class="mt-2 mb-1">{{ $info['label'] }}</h6>
@@ -82,7 +71,7 @@
 
     {{-- Step 2: Details --}}
     @if($currentStep === 2)
-    <div class="card custom-card">
+    <div wire:key="step-2" class="card custom-card">
         <div class="card-header"><div class="card-title">Product Details</div></div>
         <div class="card-body">
             <div class="row gy-3">
@@ -159,7 +148,7 @@
 
     {{-- Step 3: Inventory --}}
     @if($currentStep === 3)
-    <div class="card custom-card">
+    <div wire:key="step-3" class="card custom-card">
         <div class="card-header"><div class="card-title">Inventory Settings</div></div>
         <div class="card-body">
             <div class="row gy-3">
@@ -212,7 +201,7 @@
 
     {{-- Step 4: Manufacturing (only for manufactured products) --}}
     @if($currentStep === 4 && $type === 'manufactured')
-    <div class="card custom-card">
+    <div wire:key="step-4" class="card custom-card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <div class="card-title">Bill of Materials</div>
             <button type="button" class="btn btn-sm btn-outline-primary" wire:click="addBomItem">
@@ -301,7 +290,7 @@
 
     {{-- Step 5: Pricing --}}
     @if($currentStep === 5)
-    <div class="card custom-card">
+    <div wire:key="step-5" class="card custom-card">
         <div class="card-header"><div class="card-title">Pricing</div></div>
         <div class="card-body">
             <div class="row gy-3">
@@ -352,7 +341,7 @@
 
     {{-- Step 6: Review --}}
     @if($currentStep === 6)
-    <div class="card custom-card">
+    <div wire:key="step-6" class="card custom-card">
         <div class="card-header"><div class="card-title">Review & Confirm</div></div>
         <div class="card-body">
             <div class="row g-3">
@@ -429,7 +418,7 @@
     <div class="d-flex justify-content-between mb-4">
         <div>
             @if($currentStep > 1)
-                <button type="button" class="btn btn-light btn-wave" wire:click="previousStep">
+                <button type="button" class="btn btn-light" wire:click="previousStep">
                     <i class="ri-arrow-left-line me-1"></i> Previous
                 </button>
             @else
@@ -438,11 +427,11 @@
         </div>
         <div>
             @if($currentStep < $totalSteps)
-                <button type="button" class="btn btn-primary btn-wave" wire:click="nextStep">
+                <button type="button" class="btn btn-primary" wire:click="nextStep">
                     Next <i class="ri-arrow-right-line ms-1"></i>
                 </button>
             @else
-                <button type="button" class="btn btn-success btn-wave" wire:click="save">
+                <button type="button" class="btn btn-success" wire:click="save">
                     <span wire:loading.remove wire:target="save">
                         <i class="ri-check-line me-1"></i> {{ $productId ? 'Update Product' : 'Create Product' }}
                     </span>
