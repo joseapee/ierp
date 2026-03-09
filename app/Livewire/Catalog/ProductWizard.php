@@ -355,6 +355,26 @@ class ProductWizard extends Component
         $this->totalSteps = $this->type === 'manufactured' ? 6 : 6;
     }
 
+    public function updatedMarkupPercentage(): void
+    {
+        $this->recalculateSellPrice();
+    }
+
+    public function updatedProfitAmount(): void
+    {
+        $this->recalculateSellPrice();
+    }
+
+    public function updatedCostPrice(): void
+    {
+        $this->recalculateSellPrice();
+    }
+
+    public function updatedPricingMode(): void
+    {
+        $this->recalculateSellPrice();
+    }
+
     private function recalculateBomCost(): void
     {
         $totalCost = 0;
@@ -367,11 +387,17 @@ class ProductWizard extends Component
         }
 
         $this->cost_price = number_format($totalCost, 4, '.', '');
+        $this->recalculateSellPrice();
+    }
 
-        if ($this->pricing_mode === 'percentage_markup' && $this->markup_percentage) {
-            $this->sell_price = number_format($totalCost * (1 + (float) $this->markup_percentage / 100), 4, '.', '');
-        } elseif ($this->pricing_mode === 'fixed_profit' && $this->profit_amount) {
-            $this->sell_price = number_format($totalCost + (float) $this->profit_amount, 4, '.', '');
+    private function recalculateSellPrice(): void
+    {
+        $cost = (float) $this->cost_price;
+
+        if ($this->pricing_mode === 'percentage_markup' && $this->markup_percentage !== '') {
+            $this->sell_price = number_format($cost * (1 + (float) $this->markup_percentage / 100), 4, '.', '');
+        } elseif ($this->pricing_mode === 'fixed_profit' && $this->profit_amount !== '') {
+            $this->sell_price = number_format($cost + (float) $this->profit_amount, 4, '.', '');
         }
     }
 }
