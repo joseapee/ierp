@@ -66,6 +66,11 @@
     document.addEventListener('DOMContentLoaded', initTooltips);
     document.addEventListener('livewire:navigated', initTooltips);
 
+    // Re-initialise tooltips after Livewire morphs the DOM (e.g. wizard step change).
+    Livewire.hook('morph.updated', function () {
+        initTooltips();
+    });
+
     /**
      * Listen for Livewire `toast` dispatches and show a Toastify notification.
      */

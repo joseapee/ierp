@@ -197,8 +197,18 @@ class ProductWizard extends Component
         $this->recalculateBomCost();
     }
 
-    public function updatedBomItems(): void
+    public function updatedBomItems($value, $key): void
     {
+        // Auto-populate unit cost when a raw material is selected.
+        if (str_ends_with((string) $key, '.product_id') && $value) {
+            $index = (int) explode('.', (string) $key)[0];
+            $material = Product::find($value);
+
+            if ($material) {
+                $this->bomItems[$index]['unit_cost'] = (string) $material->cost_price;
+            }
+        }
+
         $this->recalculateBomCost();
     }
 
