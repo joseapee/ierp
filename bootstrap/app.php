@@ -15,9 +15,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant' => \App\Http\Middleware\ResolveTenant::class,
             'permission' => \App\Http\Middleware\CheckPermission::class,
             'super.admin' => \App\Http\Middleware\SuperAdminOnly::class,
+            'subscription' => \App\Http\Middleware\CheckSubscription::class,
+            'feature' => \App\Http\Middleware\CheckFeature::class,
         ]);
 
         $middleware->appendToGroup('web', \App\Http\Middleware\ResolveTenant::class);
+
+        $middleware->validateCsrfTokens(except: [
+            'webhook/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

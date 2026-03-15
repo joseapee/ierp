@@ -381,13 +381,13 @@ class ProductionService
             ->orderByDesc('id')
             ->value('order_number');
 
-        if ($latest && preg_match('/PO-(\d+)/', $latest, $matches)) {
+        if ($latest && preg_match('/MO-(\d+)/', $latest, $matches)) {
             $next = ((int) $matches[1]) + 1;
         } else {
             $next = 1;
         }
 
-        return 'PO-'.str_pad((string) $next, 6, '0', STR_PAD_LEFT);
+        return 'MO-'.str_pad((string) $next, 6, '0', STR_PAD_LEFT);
     }
 
     /**

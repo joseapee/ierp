@@ -77,7 +77,7 @@ class ProductionServiceTest extends TestCase
     public function test_create_order(): void
     {
         $order = $this->service->createOrder([
-            'order_number' => 'PO-000001',
+            'order_number' => 'MO-000001',
             'product_id' => $this->product->id,
             'bom_id' => $this->bom->id,
             'warehouse_id' => $this->warehouse->id,
@@ -85,7 +85,7 @@ class ProductionServiceTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('production_orders', [
-            'order_number' => 'PO-000001',
+            'order_number' => 'MO-000001',
             'status' => 'draft',
             'planned_quantity' => 10,
         ]);
@@ -95,7 +95,7 @@ class ProductionServiceTest extends TestCase
     public function test_confirm_order(): void
     {
         $order = $this->service->createOrder([
-            'order_number' => 'PO-000002',
+            'order_number' => 'MO-000002',
             'product_id' => $this->product->id,
             'bom_id' => $this->bom->id,
             'warehouse_id' => $this->warehouse->id,
@@ -278,7 +278,7 @@ class ProductionServiceTest extends TestCase
     public function test_generate_order_number(): void
     {
         $number = $this->service->generateOrderNumber();
-        $this->assertEquals('PO-000001', $number);
+        $this->assertEquals('MO-000001', $number);
 
         $this->service->createOrder([
             'order_number' => $number,
@@ -289,7 +289,7 @@ class ProductionServiceTest extends TestCase
         ]);
 
         $number2 = $this->service->generateOrderNumber();
-        $this->assertEquals('PO-000002', $number2);
+        $this->assertEquals('MO-000002', $number2);
     }
 
     public function test_create_and_manage_tasks(): void

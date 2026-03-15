@@ -23,13 +23,14 @@ class ResolveTenant
         if ($user && ! $user->is_super_admin && $user->tenant_id !== null) {
             $tenant = Tenant::query()->withoutGlobalScopes()->find($user->tenant_id);
 
-            if (! $tenant || ! $tenant->isActive()) {
+            if (! $tenant) {
                 auth()->logout();
 
                 return redirect()->route('login')
-                    ->withErrors(['email' => 'Your account has been suspended. Please contact support.']);
+                    ->withErrors(['email' => 'Your account is no longer accessible. Please contact support.']);
             }
 
+            // Bind tenant regardless of status — CheckSubscription handles access control
             app()->instance('current.tenant', $tenant);
             view()->share('currentTenant', $tenant);
         }

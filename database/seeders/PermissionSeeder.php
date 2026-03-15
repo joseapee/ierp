@@ -76,6 +76,76 @@ class PermissionSeeder extends Seeder
         ['module' => 'production', 'action' => 'create',  'name' => 'Create Production Orders',  'slug' => 'production.create'],
         ['module' => 'production', 'action' => 'manage',  'name' => 'Manage Production Orders',  'slug' => 'production.manage'],
         ['module' => 'production', 'action' => 'approve', 'name' => 'Approve Production Orders', 'slug' => 'production.approve'],
+
+        // Accounting — Chart of Accounts
+        ['module' => 'accounts', 'action' => 'view',   'name' => 'View Accounts',   'slug' => 'accounts.view'],
+        ['module' => 'accounts', 'action' => 'create', 'name' => 'Create Accounts', 'slug' => 'accounts.create'],
+        ['module' => 'accounts', 'action' => 'edit',   'name' => 'Edit Accounts',   'slug' => 'accounts.edit'],
+
+        // Accounting — Journal Entries
+        ['module' => 'journal', 'action' => 'view',   'name' => 'View Journal Entries',   'slug' => 'journal.view'],
+        ['module' => 'journal', 'action' => 'create', 'name' => 'Create Journal Entries', 'slug' => 'journal.create'],
+
+        // Accounting — Reports
+        ['module' => 'reports', 'action' => 'view', 'name' => 'View Financial Reports', 'slug' => 'reports.view'],
+
+        // Accounting — Fiscal Years
+        ['module' => 'fiscal-years', 'action' => 'view',   'name' => 'View Fiscal Years',   'slug' => 'fiscal-years.view'],
+        ['module' => 'fiscal-years', 'action' => 'manage', 'name' => 'Manage Fiscal Years', 'slug' => 'fiscal-years.manage'],
+
+        // Customers module
+        ['module' => 'customers', 'action' => 'view',   'name' => 'View Customers',   'slug' => 'customers.view'],
+        ['module' => 'customers', 'action' => 'create', 'name' => 'Create Customers', 'slug' => 'customers.create'],
+        ['module' => 'customers', 'action' => 'edit',   'name' => 'Edit Customers',   'slug' => 'customers.edit'],
+        ['module' => 'customers', 'action' => 'delete', 'name' => 'Delete Customers', 'slug' => 'customers.delete'],
+
+        // Suppliers module
+        ['module' => 'suppliers', 'action' => 'view',   'name' => 'View Suppliers',   'slug' => 'suppliers.view'],
+        ['module' => 'suppliers', 'action' => 'create', 'name' => 'Create Suppliers', 'slug' => 'suppliers.create'],
+        ['module' => 'suppliers', 'action' => 'edit',   'name' => 'Edit Suppliers',   'slug' => 'suppliers.edit'],
+        ['module' => 'suppliers', 'action' => 'delete', 'name' => 'Delete Suppliers', 'slug' => 'suppliers.delete'],
+
+        // Purchase Orders module
+        ['module' => 'purchase-orders', 'action' => 'view',   'name' => 'View Purchase Orders',   'slug' => 'purchase-orders.view'],
+        ['module' => 'purchase-orders', 'action' => 'create', 'name' => 'Create Purchase Orders', 'slug' => 'purchase-orders.create'],
+        ['module' => 'purchase-orders', 'action' => 'manage', 'name' => 'Manage Purchase Orders', 'slug' => 'purchase-orders.manage'],
+
+        // Sales Orders module
+        ['module' => 'sales-orders', 'action' => 'view',   'name' => 'View Sales Orders',   'slug' => 'sales-orders.view'],
+        ['module' => 'sales-orders', 'action' => 'create', 'name' => 'Create Sales Orders', 'slug' => 'sales-orders.create'],
+        ['module' => 'sales-orders', 'action' => 'manage', 'name' => 'Manage Sales Orders', 'slug' => 'sales-orders.manage'],
+
+        // CRM — Leads
+        ['module' => 'leads', 'action' => 'view',    'name' => 'View Leads',    'slug' => 'leads.view'],
+        ['module' => 'leads', 'action' => 'create',  'name' => 'Create Leads',  'slug' => 'leads.create'],
+        ['module' => 'leads', 'action' => 'edit',    'name' => 'Edit Leads',    'slug' => 'leads.edit'],
+        ['module' => 'leads', 'action' => 'delete',  'name' => 'Delete Leads',  'slug' => 'leads.delete'],
+        ['module' => 'leads', 'action' => 'convert', 'name' => 'Convert Leads', 'slug' => 'leads.convert'],
+
+        // CRM — Contacts
+        ['module' => 'crm-contacts', 'action' => 'view',   'name' => 'View CRM Contacts',   'slug' => 'crm-contacts.view'],
+        ['module' => 'crm-contacts', 'action' => 'create', 'name' => 'Create CRM Contacts', 'slug' => 'crm-contacts.create'],
+        ['module' => 'crm-contacts', 'action' => 'edit',   'name' => 'Edit CRM Contacts',   'slug' => 'crm-contacts.edit'],
+        ['module' => 'crm-contacts', 'action' => 'delete', 'name' => 'Delete CRM Contacts', 'slug' => 'crm-contacts.delete'],
+
+        // CRM — Opportunities
+        ['module' => 'opportunities', 'action' => 'view',   'name' => 'View Opportunities',   'slug' => 'opportunities.view'],
+        ['module' => 'opportunities', 'action' => 'create', 'name' => 'Create Opportunities', 'slug' => 'opportunities.create'],
+        ['module' => 'opportunities', 'action' => 'edit',   'name' => 'Edit Opportunities',   'slug' => 'opportunities.edit'],
+        ['module' => 'opportunities', 'action' => 'delete', 'name' => 'Delete Opportunities', 'slug' => 'opportunities.delete'],
+        ['module' => 'opportunities', 'action' => 'manage', 'name' => 'Manage Pipeline',      'slug' => 'opportunities.manage'],
+
+        // CRM — Activities
+        ['module' => 'crm-activities', 'action' => 'view',   'name' => 'View Activities',   'slug' => 'crm-activities.view'],
+        ['module' => 'crm-activities', 'action' => 'create', 'name' => 'Create Activities', 'slug' => 'crm-activities.create'],
+        ['module' => 'crm-activities', 'action' => 'edit',   'name' => 'Edit Activities',   'slug' => 'crm-activities.edit'],
+
+        // CRM — Communications
+        ['module' => 'crm-communications', 'action' => 'view',   'name' => 'View Communications',   'slug' => 'crm-communications.view'],
+        ['module' => 'crm-communications', 'action' => 'create', 'name' => 'Create Communications', 'slug' => 'crm-communications.create'],
+
+        // CRM — Pipeline Stages
+        ['module' => 'pipeline-stages', 'action' => 'manage', 'name' => 'Manage Pipeline Stages', 'slug' => 'pipeline-stages.manage'],
     ];
 
     public function run(): void

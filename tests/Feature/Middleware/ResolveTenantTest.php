@@ -23,14 +23,14 @@ class ResolveTenantTest extends TestCase
             ->assertOk();
     }
 
-    public function test_suspended_tenant_user_is_redirected_to_login(): void
+    public function test_suspended_tenant_user_can_still_access_dashboard(): void
     {
         $tenant = Tenant::factory()->create(['status' => 'suspended']);
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
         $this->actingAs($user)
             ->get(route('dashboard'))
-            ->assertRedirect(route('login'));
+            ->assertOk();
     }
 
     public function test_super_admin_without_tenant_can_access_dashboard(): void

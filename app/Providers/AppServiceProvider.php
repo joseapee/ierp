@@ -19,9 +19,12 @@ use App\Policies\StockAdjustmentPolicy;
 use App\Policies\TenantPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\WarehousePolicy;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use SocialiteProviders\Apple\AppleExtendSocialite;
+use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +41,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register Apple Sign In Socialite driver
+        Event::listen(SocialiteWasCalled::class, AppleExtendSocialite::class);
+
         // Super admin bypasses ALL gate checks
         Gate::before(function (User $user, string $ability): ?bool {
             if ($user->is_super_admin) {

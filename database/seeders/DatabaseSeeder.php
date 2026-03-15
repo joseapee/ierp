@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class,
             RoleSeeder::class,
+            PlanSeeder::class,
             TenantSeeder::class,
             CategorySeeder::class,
             BrandSeeder::class,
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ProductAttributeSeeder::class,
             ProductSeeder::class,
             ProductionStageSeeder::class,
+            AccountSeeder::class,
         ]);
     }
 }

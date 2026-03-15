@@ -41,6 +41,22 @@
                     </a>
                 </li>
 
+                {{-- Billing --}}
+                <li class="slide {{ request()->routeIs('billing.*') ? 'active' : '' }}">
+                    <a href="{{ route('billing.index') }}"
+                       class="side-menu__item {{ request()->routeIs('billing.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="24" y="56" width="208" height="144" rx="8" opacity="0.2"/>
+                            <rect x="24" y="56" width="208" height="144" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="168" y1="168" x2="200" y2="168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="24" y1="96" x2="232" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Billing</span>
+                    </a>
+                </li>
+
                 {{-- ── Admin section ── --}}
                 <li class="slide__category"><span class="category-name">Administration</span></li>
 
@@ -223,6 +239,191 @@
                 @endcan
                 @endcanany
 
+                {{-- ── Sales section ── --}}
+                @canany(['customers.view', 'sales-orders.view'])
+                <li class="slide__category"><span class="category-name">Sales</span></li>
+
+                @can('customers.view')
+                <li class="slide {{ request()->routeIs('sales.customers.*') ? 'active' : '' }}">
+                    <a href="{{ route('sales.customers.index') }}"
+                       class="side-menu__item {{ request()->routeIs('sales.customers.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <circle cx="128" cy="96" r="64" opacity="0.2"/>
+                            <circle cx="128" cy="96" r="64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <path d="M32,224c0-52.94,43.06-96,96-96s96,43.06,96,96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Customers</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('sales-orders.view')
+                <li class="slide {{ request()->routeIs('sales.orders.*') ? 'active' : '' }}">
+                    <a href="{{ route('sales.orders.index') }}"
+                       class="side-menu__item {{ request()->routeIs('sales.orders.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <path d="M32,64H224V192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8Z" opacity="0.2"/>
+                            <rect x="32" y="64" width="192" height="144" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="104" x2="176" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="136" x2="176" y2="136" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="168" x2="128" y2="168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Sales Orders</span>
+                    </a>
+                </li>
+                @endcan
+                @endcanany
+
+                {{-- ── CRM section ── --}}
+                @canany(['leads.view', 'crm-contacts.view', 'opportunities.view', 'crm-activities.view'])
+                <li class="slide__category"><span class="category-name">CRM</span></li>
+
+                @can('leads.view')
+                <li class="slide {{ request()->routeIs('crm.leads.*') ? 'active' : '' }}">
+                    <a href="{{ route('crm.leads.index') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.leads.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <circle cx="128" cy="120" r="40" opacity="0.2"/>
+                            <circle cx="128" cy="120" r="40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <path d="M63.8,199.37a72,72,0,0,1,128.4,0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="176 56 224 56 224 104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="224" y1="56" x2="176" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Leads</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('crm-contacts.view')
+                <li class="slide {{ request()->routeIs('crm.contacts.*') ? 'active' : '' }}">
+                    <a href="{{ route('crm.contacts.index') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.contacts.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <circle cx="108" cy="100" r="28" opacity="0.2"/>
+                            <circle cx="108" cy="100" r="28" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <path d="M52,168c0-28,25.07-44,56-44s56,16,56,44" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <path d="M196,120h12a40,40,0,0,1,0,80H40a40,40,0,0,1,0-80H52" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Contacts</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('opportunities.view')
+                <li class="slide {{ request()->routeIs('crm.opportunities.*') ? 'active' : '' }}">
+                    <a href="{{ route('crm.opportunities.index') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.opportunities.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <path d="M128,24A104,104,0,1,0,232,128,104,104,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88,88,0,0,1,128,216Z" opacity="0.2"/>
+                            <circle cx="128" cy="128" r="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="128 72 128 128 184 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Opportunities</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('opportunities.view')
+                <li class="slide {{ request()->routeIs('crm.pipeline.*') ? 'active' : '' }}">
+                    <a href="{{ route('crm.pipeline.index') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.pipeline.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="48" y="32" width="56" height="192" rx="8" opacity="0.2"/>
+                            <rect x="48" y="32" width="56" height="192" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <rect x="152" y="32" width="56" height="128" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Pipeline</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('crm-activities.view')
+                <li class="slide {{ request()->routeIs('crm.activities.*') ? 'active' : '' }}">
+                    <a href="{{ route('crm.activities.index') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.activities.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" opacity="0.2"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="96" x2="176" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="128" x2="176" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="160" x2="128" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Activities</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('pipeline-stages.manage')
+                <li class="slide {{ request()->routeIs('crm.pipeline.stages') ? 'active' : '' }}">
+                    <a href="{{ route('crm.pipeline.stages') }}"
+                       class="side-menu__item {{ request()->routeIs('crm.pipeline.stages') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <circle cx="128" cy="128" r="88" opacity="0.2"/>
+                            <circle cx="128" cy="128" r="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="128 80 128 128 168 152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Pipeline Stages</span>
+                    </a>
+                </li>
+                @endcan
+                @endcanany
+
+                {{-- ── Procurement section ── --}}
+                @canany(['suppliers.view', 'purchase-orders.view'])
+                <li class="slide__category"><span class="category-name">Procurement</span></li>
+
+                @can('suppliers.view')
+                <li class="slide {{ request()->routeIs('procurement.suppliers.*') ? 'active' : '' }}">
+                    <a href="{{ route('procurement.suppliers.index') }}"
+                       class="side-menu__item {{ request()->routeIs('procurement.suppliers.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="32" y="64" width="192" height="144" rx="8" opacity="0.2"/>
+                            <rect x="32" y="64" width="192" height="144" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="128" y1="24" x2="128" y2="64" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="80 48 128 24 176 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Suppliers</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('purchase-orders.view')
+                <li class="slide {{ request()->routeIs('procurement.purchase-orders.*') ? 'active' : '' }}">
+                    <a href="{{ route('procurement.purchase-orders.index') }}"
+                       class="side-menu__item {{ request()->routeIs('procurement.purchase-orders.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <path d="M184,32H72A16,16,0,0,0,56,48V224l36-24,36,24,36-24,36,24V48A16,16,0,0,0,184,32Z" opacity="0.2"/>
+                            <path d="M184,32H72A16,16,0,0,0,56,48V224l36-24,36,24,36-24,36,24V48A16,16,0,0,0,184,32Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="96" y1="88" x2="160" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="96" y1="120" x2="160" y2="120" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="96" y1="152" x2="128" y2="152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Purchase Orders</span>
+                    </a>
+                </li>
+                @endcan
+                @endcanany
+
                 {{-- ── Manufacturing section ── --}}
                 @canany(['bom.view', 'production.view', 'production.manage'])
                 <li class="slide__category"><span class="category-name">Manufacturing</span></li>
@@ -295,6 +496,80 @@
                 @endcan
                 @endcanany
 
+                {{-- ── Accounting section ── --}}
+                @canany(['accounts.view', 'journal.view', 'reports.view', 'fiscal-years.view'])
+                <li class="slide__category"><span class="category-name">Accounting</span></li>
+
+                @can('accounts.view')
+                <li class="slide {{ request()->routeIs('accounting.accounts.*') ? 'active' : '' }}">
+                    <a href="{{ route('accounting.accounts.index') }}"
+                       class="side-menu__item {{ request()->routeIs('accounting.accounts.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="32" y="48" width="192" height="160" rx="8" opacity="0.2"/>
+                            <rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="32" y1="96" x2="224" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="32" y1="144" x2="224" y2="144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="128" y1="96" x2="128" y2="208" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Chart of Accounts</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('journal.view')
+                <li class="slide {{ request()->routeIs('accounting.journal-entries.*') ? 'active' : '' }}">
+                    <a href="{{ route('accounting.journal-entries.index') }}"
+                       class="side-menu__item {{ request()->routeIs('accounting.journal-entries.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <path d="M32,56H224a0,0,0,0,1,0,0V192a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8V56A0,0,0,0,1,32,56Z" opacity="0.2"/>
+                            <rect x="32" y="56" width="192" height="144" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="96" x2="176" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="128" x2="176" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="160" x2="176" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Journal Entries</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('reports.view')
+                <li class="slide {{ request()->routeIs('accounting.reports.*') ? 'active' : '' }}">
+                    <a href="{{ route('accounting.reports.trial-balance') }}"
+                       class="side-menu__item {{ request()->routeIs('accounting.reports.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <polyline points="224 200 32 200 32 56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="32 168 96 112 144 152 224 72" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Reports</span>
+                    </a>
+                </li>
+                @endcan
+
+                @can('fiscal-years.view')
+                <li class="slide {{ request()->routeIs('accounting.fiscal-years.*') ? 'active' : '' }}">
+                    <a href="{{ route('accounting.fiscal-years.index') }}"
+                       class="side-menu__item {{ request()->routeIs('accounting.fiscal-years.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" opacity="0.2"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="176" y1="24" x2="176" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="24" x2="80" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="40" y1="88" x2="216" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Fiscal Years</span>
+                    </a>
+                </li>
+                @endcan
+                @endcanany
+
                 {{-- Tenant Management (super admin only) --}}
                 @if(auth()->user()->is_super_admin)
                 <li class="slide__category"><span class="category-name">Super Admin</span></li>
@@ -315,6 +590,41 @@
                             <polyline points="24 48 88 48 120 176" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
                         </svg>
                         <span class="side-menu__label">Tenants</span>
+                    </a>
+                </li>
+
+                {{-- Plans --}}
+                <li class="slide {{ request()->routeIs('admin.plans.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.plans.index') }}"
+                       class="side-menu__item {{ request()->routeIs('admin.plans.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="32" y="48" width="192" height="160" rx="8" opacity="0.2"/>
+                            <rect x="32" y="48" width="192" height="160" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="96" x2="176" y2="96" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="128" x2="176" y2="128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="160" x2="128" y2="160" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Plans</span>
+                    </a>
+                </li>
+
+                {{-- Subscriptions --}}
+                <li class="slide {{ request()->routeIs('admin.subscriptions.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.subscriptions.index') }}"
+                       class="side-menu__item {{ request()->routeIs('admin.subscriptions.*') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 256 256">
+                            <rect width="256" height="256" fill="none"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" opacity="0.2"/>
+                            <rect x="40" y="40" width="176" height="176" rx="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="176" y1="24" x2="176" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="80" y1="24" x2="80" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <line x1="40" y1="88" x2="216" y2="88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                            <polyline points="128 120 128 152 152 152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>
+                        </svg>
+                        <span class="side-menu__label">Subscriptions</span>
                     </a>
                 </li>
                 @endif
