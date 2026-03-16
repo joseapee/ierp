@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Setup;
 
 use App\Models\Plan;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -105,5 +106,25 @@ class SetupWizardTest extends TestCase
         Livewire::actingAs($user)
             ->test(\App\Livewire\Setup\SetupWizard::class)
             ->assertSet('totalSteps', 2);
+    }
+
+    public function test_complete_setup_assigns_tenant_admin_role(): void
+    {
+        $plan = Plan::factory()->create(['trial_days' => 14]);
+        $adminRole = Role::factory()->create(['slug' => 'tenant-admin', 'tenant_id' => null]);
+        $user = User::factory()->create(['tenant_id' => null]);
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->set('businessName', 'Role Test Co')
+            ->set('slug', 'role-test-co')
+            ->call('nextStep')
+            ->set('selectedPlanId', $plan->id)
+            ->set('billingCycle', 'monthly')
+            ->call('completeSetup')
+            ->assertRedirect(route('onboarding'));
+
+        $user->refresh();
+        $this->assertTrue($user->roles->contains($adminRole));
     }
 }

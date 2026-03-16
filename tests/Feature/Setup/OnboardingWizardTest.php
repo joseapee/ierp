@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Setup;
 
 use App\Models\Plan;
+use App\Models\Role;
 use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -184,5 +186,53 @@ class OnboardingWizardTest extends TestCase
             ->call('saveStep')
             ->assertHasErrors(['categoryName'])
             ->assertSet('step', 9);
+    }
+
+    public function test_invite_step_can_be_skipped(): void
+    {
+        [$user, $tenant] = $this->createOnboardingUser();
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Setup\OnboardingWizard::class)
+            ->set('step', 8)
+            ->call('skipStep')
+            ->assertHasNoErrors()
+            ->assertSet('step', 9);
+    }
+
+    public function test_invite_step_validates_role_required(): void
+    {
+        [$user, $tenant] = $this->createOnboardingUser();
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Setup\OnboardingWizard::class)
+            ->set('step', 8)
+            ->set('inviteEmail', 'test@example.com')
+            ->set('inviteRoleId', null)
+            ->call('saveStep')
+            ->assertHasErrors(['inviteRoleId'])
+            ->assertSet('step', 8);
+    }
+
+    public function test_invite_step_creates_user_with_role(): void
+    {
+        Notification::fake();
+
+        [$user, $tenant] = $this->createOnboardingUser();
+        $role = Role::factory()->create(['tenant_id' => $tenant->id]);
+
+        Livewire::actingAs($user)
+            ->test(\App\Livewire\Setup\OnboardingWizard::class)
+            ->set('step', 8)
+            ->set('inviteEmail', 'invited@example.com')
+            ->set('inviteRoleId', $role->id)
+            ->call('saveStep')
+            ->assertHasNoErrors()
+            ->assertSet('step', 9);
+
+        $invited = User::where('email', 'invited@example.com')->first();
+        $this->assertNotNull($invited);
+        $this->assertEquals($tenant->id, $invited->tenant_id);
+        $this->assertTrue($invited->roles->contains($role));
     }
 }

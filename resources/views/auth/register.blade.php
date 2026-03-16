@@ -111,7 +111,10 @@
                 </div>
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary btn-wave">Register</button>
+                    <button type="submit" class="btn btn-primary btn-wave" id="register-btn">
+                        <span id="register-btn-text">Register</span>
+                        <span id="register-btn-spinner" class="spinner-border spinner-border-sm me-1 d-none" role="status"></span>
+                    </button>
                 </div>
 
                 <div class="text-center mt-3 fw-medium fs-13">
@@ -120,6 +123,23 @@
                 </div>
 
             </form>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var form = document.querySelector('form[action="{{ route('register') }}"]');
+                    if (form) {
+                        form.addEventListener('submit', function () {
+                            var btn = document.getElementById('register-btn');
+                            var text = document.getElementById('register-btn-text');
+                            var spinner = document.getElementById('register-btn-spinner');
+                            if (btn && text && spinner) {
+                                btn.setAttribute('disabled', 'disabled');
+                                spinner.classList.remove('d-none');
+                                text.textContent = 'Registering...';
+                            }
+                        });
+                    }
+                });
+            </script>
 
         </div>
     </div>

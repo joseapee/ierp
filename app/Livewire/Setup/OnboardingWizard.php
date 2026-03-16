@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Setup;
 
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -40,14 +41,32 @@ class OnboardingWizard extends Component
     // Step 8: Invite team member
     public string $inviteEmail = '';
 
+    public ?int $inviteRoleId = null;
+
     // Step 9: First category
     public string $categoryName = '';
 
     public function mount(): void
     {
+        $user = auth()->user();
+
+        // Redirect to setup if user has no tenant
+        if ($user->tenant_id === null) {
+            $this->redirect(route('setup'), navigate: true);
+
+            return;
+        }
+
         $tenant = app()->bound('current.tenant') ? app('current.tenant') : null;
 
         if ($tenant) {
+            // Redirect to dashboard if onboarding is already complete
+            if ($tenant->onboarding_completed_at !== null) {
+                $this->redirect(route('dashboard'), navigate: true);
+
+                return;
+            }
+
             $this->industry = $tenant->industry ?? '';
             $this->country = $tenant->country ?? '';
             $this->city = $tenant->city ?? '';
@@ -60,6 +79,12 @@ class OnboardingWizard extends Component
     public function previousStep(): void
     {
         $this->step = max($this->step - 1, 1);
+    }
+
+    public function skipStep(): void
+    {
+        $this->resetValidation();
+        $this->step = min($this->step + 1, $this->totalSteps);
     }
 
     public function saveStep(): void
@@ -97,7 +122,10 @@ class OnboardingWizard extends Component
                 'warehouseName' => ['required', 'string', 'max:255'],
                 'warehouseLocation' => ['required', 'string', 'max:255'],
             ]),
-            8 => $this->validate(['inviteEmail' => ['required', 'email', 'max:255']]),
+            8 => $this->validate([
+                'inviteEmail' => ['required', 'email', 'max:255'],
+                'inviteRoleId' => ['required', 'exists:roles,id'],
+            ]),
             9 => $this->validate(['categoryName' => ['required', 'string', 'max:255']]),
             default => null,
         };
@@ -143,30 +171,58 @@ class OnboardingWizard extends Component
 
     protected function saveWarehouse(mixed $tenant): void
     {
-        \App\Models\Warehouse::create([
-            'tenant_id' => $tenant->id,
-            'name' => $this->warehouseName,
-            'location' => $this->warehouseLocation,
-            'is_active' => true,
-        ]);
+        \App\Models\Warehouse::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'code' => Str::upper(Str::slug($this->warehouseName, '-'))],
+            [
+                'name' => $this->warehouseName,
+                'address' => $this->warehouseLocation,
+                'is_active' => true,
+                'is_default' => true,
+            ]
+        );
     }
 
     protected function saveInvite(): void
     {
-        // Invite functionality — placeholder for email invitation
-        // Will be implemented when email service is configured
+        $tenant = app('current.tenant');
+
+        $user = \App\Models\User::firstOrCreate(
+            ['email' => $this->inviteEmail],
+            [
+                'tenant_id' => $tenant->id,
+                'name' => Str::before($this->inviteEmail, '@'),
+                'password' => bcrypt(Str::random(32)),
+                'is_active' => true,
+            ]
+        );
+
+        $role = \App\Models\Role::find($this->inviteRoleId);
+        if ($role && ! $user->roles->contains($role)) {
+            $user->roles()->attach($role);
+        }
+
+        if ($user->wasRecentlyCreated) {
+            $user->sendEmailVerificationNotification();
+        }
     }
 
     protected function saveCategory(mixed $tenant): void
     {
-        \App\Models\Category::create([
-            'tenant_id' => $tenant->id,
-            'name' => $this->categoryName,
-        ]);
+        \App\Models\Category::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'slug' => Str::slug($this->categoryName)],
+            ['name' => $this->categoryName]
+        );
     }
 
     public function render(): mixed
     {
-        return view('livewire.setup.onboarding-wizard');
+        return view('livewire.setup.onboarding-wizard', [
+            'roles' => \App\Models\Role::query()
+                ->where(function ($q) {
+                    $q->whereNull('tenant_id')->orWhere('tenant_id', auth()->user()->tenant_id);
+                })
+                ->orderBy('name')
+                ->get(),
+        ]);
     }
 }

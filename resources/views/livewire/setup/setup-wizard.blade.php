@@ -118,7 +118,7 @@
 
         <div class="card-footer d-flex justify-content-between">
             @if($step > 1)
-                <button class="btn btn-light" wire:click="previousStep">
+                <button class="btn btn-light" wire:click="previousStep" wire:loading.attr="disabled">
                     <i class="ri-arrow-left-line me-1"></i> Back
                 </button>
             @else
@@ -126,12 +126,14 @@
             @endif
 
             @if($step < $totalSteps)
-                <button class="btn btn-primary" wire:click="nextStep">
-                    Next <i class="ri-arrow-right-line ms-1"></i>
+                <button class="btn btn-primary" wire:click="nextStep" wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="nextStep">Next <i class="ri-arrow-right-line ms-1"></i></span>
+                    <span wire:loading wire:target="nextStep"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Saving...</span>
                 </button>
             @else
-                <button class="btn btn-primary" wire:click="completeSetup">
-                    Start Free Trial <i class="ri-rocket-line ms-1"></i>
+                <button class="btn btn-primary" wire:click="completeSetup" wire:loading.attr="disabled">
+                    <span wire:loading.remove wire:target="completeSetup">Start Free Trial <i class="ri-rocket-line ms-1"></i></span>
+                    <span wire:loading wire:target="completeSetup"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Setting up...</span>
                 </button>
             @endif
         </div>

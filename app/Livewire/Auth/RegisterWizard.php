@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Livewire\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -51,10 +50,10 @@ class RegisterWizard extends Component
             'phone' => $this->phone ?: null,
         ]);
 
-        event(new Registered($user));
         Auth::login($user);
+        $user->sendEmailVerificationNotification();
 
-        $this->redirect(route('setup'));
+        $this->redirect(route('verification.notice'));
     }
 
     protected function validateStep(): void

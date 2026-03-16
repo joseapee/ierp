@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'super.admin' => \App\Http\Middleware\SuperAdminOnly::class,
             'subscription' => \App\Http\Middleware\CheckSubscription::class,
             'feature' => \App\Http\Middleware\CheckFeature::class,
+            'setup.complete' => \App\Http\Middleware\EnsureSetupComplete::class,
         ]);
 
         $middleware->appendToGroup('web', \App\Http\Middleware\ResolveTenant::class);

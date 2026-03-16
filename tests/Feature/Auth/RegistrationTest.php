@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -81,7 +79,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        Event::fake([Registered::class]);
+        Notification::fake();
 
         Livewire::test(\App\Livewire\Auth\RegisterWizard::class)
             ->set('email', 'newuser@example.com')
@@ -90,7 +88,7 @@ class RegistrationTest extends TestCase
             ->set('name', 'Test User')
             ->set('phone', '+234 800 000 0000')
             ->call('completeRegistration')
-            ->assertRedirect(route('setup'));
+            ->assertRedirect(route('verification.notice'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'newuser@example.com',
@@ -99,7 +97,9 @@ class RegistrationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        Event::assertDispatched(Registered::class);
+
+        $user = User::where('email', 'newuser@example.com')->first();
+        Notification::assertSentTo($user, VerifyEmail::class);
     }
 
     public function test_new_user_email_is_not_verified(): void

@@ -18,7 +18,7 @@ class CheckSubscriptionTest extends TestCase
     public function test_active_subscription_passes(): void
     {
         $plan = Plan::factory()->create();
-        $tenant = Tenant::factory()->create(['plan_id' => $plan->id]);
+        $tenant = Tenant::factory()->setupComplete()->create(['plan_id' => $plan->id]);
         Subscription::factory()->active()->for($tenant)->for($plan)->create();
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
@@ -30,7 +30,7 @@ class CheckSubscriptionTest extends TestCase
     public function test_trial_subscription_passes(): void
     {
         $plan = Plan::factory()->create();
-        $tenant = Tenant::factory()->create(['plan_id' => $plan->id]);
+        $tenant = Tenant::factory()->setupComplete()->create(['plan_id' => $plan->id]);
         Subscription::factory()->trial()->for($tenant)->for($plan)->create();
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
@@ -42,7 +42,7 @@ class CheckSubscriptionTest extends TestCase
     public function test_expired_subscription_redirects_to_billing(): void
     {
         $plan = Plan::factory()->create();
-        $tenant = Tenant::factory()->create(['plan_id' => $plan->id]);
+        $tenant = Tenant::factory()->setupComplete()->create(['plan_id' => $plan->id]);
         Subscription::factory()->expired()->for($tenant)->for($plan)->create();
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
@@ -53,7 +53,7 @@ class CheckSubscriptionTest extends TestCase
 
     public function test_no_subscription_redirects_to_billing(): void
     {
-        $tenant = Tenant::factory()->create();
+        $tenant = Tenant::factory()->setupComplete()->create();
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
         $this->actingAs($user)

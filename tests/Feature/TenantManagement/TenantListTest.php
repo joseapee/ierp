@@ -28,7 +28,7 @@ class TenantListTest extends TestCase
 
     public function test_non_super_admin_is_forbidden(): void
     {
-        $tenant = Tenant::factory()->create();
+        $tenant = Tenant::factory()->onboardingComplete()->create();
         app()->instance('current.tenant', $tenant);
 
         $user = User::factory()->create([

@@ -141,12 +141,24 @@
 
             {{-- Step 8: Invite --}}
             @if($step === 8)
-                <p class="text-muted fs-13 mb-3">Invite a team member to help you get started.</p>
+                <p class="text-muted fs-13 mb-3">Invite a team member to help you get started. You can skip this step and invite members later.</p>
                 <div class="mb-3">
                     <label class="form-label">Email Address</label>
                     <input type="email" class="form-control @error('inviteEmail') is-invalid @enderror" wire:model="inviteEmail"
                            placeholder="colleague@example.com">
                     @error('inviteEmail')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-select @error('inviteRoleId') is-invalid @enderror" wire:model="inviteRoleId">
+                        <option value="">Select a role</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('inviteRoleId')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -177,22 +189,30 @@
         <div class="card-footer d-flex justify-content-between">
             <div>
                 @if($step > 1 && $step < $totalSteps)
-                    <button class="btn btn-light" wire:click="previousStep">
+                    <button class="btn btn-light" wire:click="previousStep" wire:loading.attr="disabled">
                         <i class="ri-arrow-left-line me-1"></i> Back
                     </button>
                 @endif
             </div>
 
             <div class="d-flex gap-2">
+                @if($step === 8)
+                    <button class="btn btn-outline-secondary" wire:click="skipStep" wire:loading.attr="disabled">
+                        Skip <i class="ri-skip-forward-line ms-1"></i>
+                    </button>
+                @endif
+
                 @if($step < $totalSteps && $step !== 10)
-                    <button class="btn btn-primary" wire:click="saveStep">
-                        Save & Next <i class="ri-arrow-right-line ms-1"></i>
+                    <button class="btn btn-primary" wire:click="saveStep" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="saveStep">Save & Next <i class="ri-arrow-right-line ms-1"></i></span>
+                        <span wire:loading wire:target="saveStep"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Saving...</span>
                     </button>
                 @endif
 
                 @if($step === $totalSteps)
-                    <button class="btn btn-success" wire:click="completeOnboarding">
-                        Go to Dashboard <i class="ri-dashboard-line ms-1"></i>
+                    <button class="btn btn-success" wire:click="completeOnboarding" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="completeOnboarding">Go to Dashboard <i class="ri-dashboard-line ms-1"></i></span>
+                        <span wire:loading wire:target="completeOnboarding"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Finishing...</span>
                     </button>
                 @endif
             </div>

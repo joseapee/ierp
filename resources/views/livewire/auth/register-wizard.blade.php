@@ -74,8 +74,9 @@
                 </div>
 
                 <div class="d-grid">
-                    <button type="button" class="btn btn-primary btn-wave" wire:click="nextStep">
-                        Continue <i class="ri-arrow-right-line ms-1"></i>
+                    <button type="button" class="btn btn-primary btn-wave" wire:click="nextStep" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="nextStep">Continue <i class="ri-arrow-right-line ms-1"></i></span>
+                        <span wire:loading wire:target="nextStep"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Processing...</span>
                     </button>
                 </div>
             @endif
@@ -130,8 +131,9 @@
                     <button type="button" class="btn btn-light" wire:click="previousStep">
                         <i class="ri-arrow-left-line me-1"></i> Back
                     </button>
-                    <button type="button" class="btn btn-primary flex-fill btn-wave" wire:click="completeRegistration">
-                        Create Account
+                    <button type="button" class="btn btn-primary flex-fill btn-wave" wire:click="completeRegistration" wire:loading.attr="disabled">
+                        <span wire:loading.remove wire:target="completeRegistration">Create Account</span>
+                        <span wire:loading wire:target="completeRegistration"><span class="spinner-border spinner-border-sm me-1" role="status"></span> Creating...</span>
                     </button>
                 </div>
             @endif

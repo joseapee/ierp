@@ -239,6 +239,20 @@
                 @endcan
                 @endcanany
 
+
+                {{-- ── POS section ── --}}
+                @can('pos.access')
+                <li class="slide__category"><span class="category-name">POS</span></li>
+                <li class="slide {{ request()->routeIs('pos.terminal') ? 'active' : '' }}">
+                    <a href="{{ route('pos.terminal') }}"
+                       class="side-menu__item {{ request()->routeIs('pos.terminal') ? 'active' : '' }}"
+                       wire:navigate>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M7 18c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2zm10 0c-1.104 0-2-.896-2-2s.896-2 2-2 2 .896 2 2-.896 2-2 2zm-12-2c0 2.206 1.794 4 4 4h8c2.206 0 4-1.794 4-4v-8c0-2.206-1.794-4-4-4h-8c-2.206 0-4 1.794-4 4v8zm2-8c0-1.104.896-2 2-2h8c1.104 0 2 .896 2 2v8c0 1.104-.896 2-2 2h-8c-1.104 0-2-.896-2-2v-8zm2 2h8v2h-8v-2zm0 4h8v2h-8v-2z"/></svg>
+                        <span class="side-menu__label">POS Terminal</span>
+                    </a>
+                </li>
+                @endcan
+
                 {{-- ── Sales section ── --}}
                 @canany(['customers.view', 'sales-orders.view'])
                 <li class="slide__category"><span class="category-name">Sales</span></li>

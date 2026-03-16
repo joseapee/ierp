@@ -13,6 +13,16 @@ class PermissionSeeder extends Seeder
      * @var array<int, array{module: string, action: string, name: string, slug: string}>
      */
     protected array $permissions = [
+        // POS module
+        ['module' => 'pos', 'action' => 'access', 'name' => 'Access POS Terminal', 'slug' => 'pos.access'],
+        ['module' => 'pos', 'action' => 'view',   'name' => 'View POS Transactions', 'slug' => 'pos.view'],
+        ['module' => 'pos', 'action' => 'create', 'name' => 'Create POS Transaction', 'slug' => 'pos.create'],
+        ['module' => 'pos', 'action' => 'edit',   'name' => 'Edit POS Transaction', 'slug' => 'pos.edit'],
+        ['module' => 'pos', 'action' => 'delete', 'name' => 'Delete POS Transaction', 'slug' => 'pos.delete'],
+        ['module' => 'pos', 'action' => 'manage-sessions', 'name' => 'Manage POS Sessions', 'slug' => 'pos.manage-sessions'],
+        ['module' => 'pos', 'action' => 'close-session', 'name' => 'Close POS Session', 'slug' => 'pos.close-session'],
+        ['module' => 'pos', 'action' => 'reprint-receipt', 'name' => 'Reprint POS Receipt', 'slug' => 'pos.reprint-receipt'],
+        ['module' => 'pos', 'action' => 'refund', 'name' => 'Refund POS Transaction', 'slug' => 'pos.refund'],
         // Users module
         ['module' => 'users', 'action' => 'view',   'name' => 'View Users',   'slug' => 'users.view'],
         ['module' => 'users', 'action' => 'create', 'name' => 'Create Users', 'slug' => 'users.create'],

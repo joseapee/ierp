@@ -25,7 +25,7 @@ class CheckFeatureTest extends TestCase
                 'feature_value' => $value,
             ]);
         }
-        $tenant = Tenant::factory()->create(['plan_id' => $plan->id]);
+        $tenant = Tenant::factory()->setupComplete()->create(['plan_id' => $plan->id]);
         Subscription::factory()->active()->for($tenant)->for($plan)->create();
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 

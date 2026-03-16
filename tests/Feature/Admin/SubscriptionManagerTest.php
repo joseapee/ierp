@@ -26,7 +26,8 @@ class SubscriptionManagerTest extends TestCase
 
     public function test_non_super_admin_cannot_access(): void
     {
-        $user = User::factory()->create(['tenant_id' => null]);
+        $tenant = Tenant::factory()->onboardingComplete()->create();
+        $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
         $this->actingAs($user)
             ->get(route('admin.subscriptions.index'))

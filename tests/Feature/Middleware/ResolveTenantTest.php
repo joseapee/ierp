@@ -15,7 +15,7 @@ class ResolveTenantTest extends TestCase
 
     public function test_active_tenant_user_can_access_dashboard(): void
     {
-        $tenant = Tenant::factory()->create(['status' => 'active']);
+        $tenant = Tenant::factory()->onboardingComplete()->create(['status' => 'active']);
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
         $this->actingAs($user)
@@ -25,7 +25,7 @@ class ResolveTenantTest extends TestCase
 
     public function test_suspended_tenant_user_can_still_access_dashboard(): void
     {
-        $tenant = Tenant::factory()->create(['status' => 'suspended']);
+        $tenant = Tenant::factory()->onboardingComplete()->create(['status' => 'suspended']);
         $user = User::factory()->create(['tenant_id' => $tenant->id]);
 
         $this->actingAs($user)

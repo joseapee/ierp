@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Setup;
 
 use App\Models\Plan;
+use App\Models\Role;
 use App\Models\Tenant;
 use App\Services\SubscriptionService;
 use Illuminate\Support\Str;
@@ -27,6 +28,24 @@ class SetupWizard extends Component
     public ?int $selectedPlanId = null;
 
     public string $billingCycle = 'monthly';
+
+    public function mount(): void
+    {
+        $user = auth()->user();
+
+        // If user already has a tenant with completed setup, move forward
+        if ($user->tenant_id !== null) {
+            $tenant = $user->tenant;
+
+            if ($tenant && $tenant->setup_completed_at !== null) {
+                if ($tenant->onboarding_completed_at === null) {
+                    $this->redirect(route('onboarding'), navigate: true);
+                } else {
+                    $this->redirect(route('dashboard'), navigate: true);
+                }
+            }
+        }
+    }
 
     public function updatedBusinessName(string $value): void
     {
@@ -69,6 +88,12 @@ class SetupWizard extends Component
 
         $user = auth()->user();
         $user->update(['tenant_id' => $tenant->id]);
+
+        // Assign the tenant-admin role to the tenant creator
+        $adminRole = Role::query()->where('slug', 'tenant-admin')->whereNull('tenant_id')->first();
+        if ($adminRole) {
+            $user->assignRole($adminRole);
+        }
 
         $subscriptionService = app(SubscriptionService::class);
         $subscriptionService->startTrial($tenant, $plan, billingCycle: $this->billingCycle);
