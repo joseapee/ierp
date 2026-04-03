@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\Permission;
 use App\Models\Role;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -15,11 +17,50 @@ class RoleService
      */
     public function all(): Collection
     {
+        $tenantId = app()->bound('current.tenant') ? app('current.tenant')->id : null;
+
         return Role::query()
+            ->where('tenant_id', $tenantId)
             ->withCount('users')
             ->with('permissions')
             ->orderBy('name')
             ->get();
+    }
+
+    /**
+     * Seed system roles for a tenant if not present.
+     */
+    public function seedSystemRolesForTenant($tenant): void
+    {
+        $allPermissions = Permission::query()->pluck('id', 'slug');
+        $roleConfigs = RoleSeeder::tenantRoles();
+
+        foreach ($roleConfigs as $config) {
+
+            $role = Role::query()->where([
+                'slug' => $config['slug'],
+                'tenant_id' => $tenant->id,
+            ])->first();
+
+            if (! $role) {
+                $role = Role::create([
+                    'slug' => $config['slug'],
+                    'tenant_id' => $tenant->id,
+                    'name' => $config['name'],
+                    'description' => $config['description'],
+                    'is_system' => true,
+                ]);
+            } else {
+                $role->update([
+                    'name' => $config['name'],
+                    'description' => $config['description'],
+                    'is_system' => true,
+                ]);
+            }
+
+            $permissionIds = array_map(fn ($slug) => $allPermissions[$slug] ?? null, $config['permissions']);
+            $role->permissions()->sync(array_filter($permissionIds));
+        }
     }
 
     /**
@@ -29,11 +70,14 @@ class RoleService
      */
     public function create(array $data): Role
     {
-        return DB::transaction(function () use ($data): Role {
+        $tenantId = $data['tenant_id'] ?? (app()->bound('current.tenant') ? app('current.tenant')->id : null);
+
+        return DB::transaction(function () use ($data, $tenantId): Role {
             $role = Role::create([
                 'name' => $data['name'],
                 'slug' => $data['slug'],
                 'description' => $data['description'] ?? null,
+                'tenant_id' => $tenantId,
             ]);
 
             if (! empty($data['permission_ids'])) {
@@ -51,8 +95,13 @@ class RoleService
      */
     public function update(Role $role, array $data): Role
     {
-        return DB::transaction(function () use ($role, $data): Role {
-            $role->update(collect($data)->only(['name', 'slug', 'description'])->toArray());
+        $tenantId = $data['tenant_id'] ?? (app()->bound('current.tenant') ? app('current.tenant')->id : null);
+
+        return DB::transaction(function () use ($role, $data, $tenantId): Role {
+            $role->update(array_merge(
+                collect($data)->only(['name', 'slug', 'description'])->toArray(),
+                ['tenant_id' => $tenantId]
+            ));
 
             if (array_key_exists('permission_ids', $data)) {
                 $role->permissions()->sync($data['permission_ids'] ?? []);

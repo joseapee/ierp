@@ -31,8 +31,8 @@
                         @forelse($fiscalYears as $fy)
                         <tr wire:key="fy-{{ $fy->id }}">
                             <td class="fw-medium">{{ $fy->name }}</td>
-                            <td>{{ $fy->start_date->format('d M Y') }}</td>
-                            <td>{{ $fy->end_date->format('d M Y') }}</td>
+                            <td>{{ format_date($fy->start_date, 'd M Y') }}</td>
+                            <td>{{ format_date($fy->end_date, 'd M Y') }}</td>
                             <td>{{ $fy->journal_entries_count }}</td>
                             <td>
                                 @php
@@ -40,7 +40,7 @@
                                 @endphp
                                 <span class="badge bg-{{ $statusColors[$fy->status] ?? 'secondary' }}-transparent">{{ ucfirst($fy->status) }}</span>
                             </td>
-                            <td>{{ $fy->closed_at ? $fy->closed_at->format('d M Y H:i') : '—' }}</td>
+                            <td>{{ $fy->closed_at ? format_datetime($fy->closed_at, 'd M Y H:i') : '—' }}</td>
                             <td class="text-end">
                                 @if($fy->status === 'open')
                                     <button class="btn btn-sm btn-outline-warning btn-wave"

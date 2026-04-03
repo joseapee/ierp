@@ -100,11 +100,11 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">Unit Cost</span>
-                            <span>{{ number_format((float)$order->unit_cost, 4) }}</span>
+                            <span>{{ format_currency((float)$order->unit_cost, 4) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">Total Cost</span>
-                            <span class="fw-bold">{{ number_format((float)$order->total_cost, 2) }}</span>
+                            <span class="fw-bold">{{ format_currency((float)$order->total_cost) }}</span>
                         </li>
                     </ul>
                 </div>
@@ -147,8 +147,8 @@
                                 <tr>
                                     <td>{{ $item->product?->name }}</td>
                                     <td class="text-end">{{ number_format($reqQty, 2) }}</td>
-                                    <td class="text-end">{{ number_format((float)$item->unit_cost, 4) }}</td>
-                                    <td class="text-end">{{ number_format($reqQty * (float)$item->unit_cost, 2) }}</td>
+                                    <td class="text-end">{{ format_currency((float)$item->unit_cost, 4) }}</td>
+                                    <td class="text-end">{{ format_currency($reqQty * (float)$item->unit_cost) }}</td>
                                     @if($order->status === 'in_progress')
                                     <td class="text-end">
                                         @can('production.manage')
@@ -193,15 +193,15 @@
                                     <td class="text-end">{{ number_format((float)$cons->planned_quantity, 2) }}</td>
                                     <td class="text-end">{{ number_format((float)$cons->actual_quantity, 2) }}</td>
                                     <td class="text-end">{{ number_format((float)$cons->wastage_quantity, 2) }}</td>
-                                    <td class="text-end">{{ number_format((float)$cons->total_cost, 2) }}</td>
-                                    <td>{{ $cons->consumed_at?->format('Y-m-d H:i') }}</td>
+                                    <td class="text-end">{{ format_currency((float)$cons->total_cost) }}</td>
+                                    <td>{{ format_datetime($cons->consumed_at) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr class="table-light">
                                     <td colspan="4" class="text-end fw-medium">Total Consumed Cost:</td>
-                                    <td class="text-end fw-bold">{{ number_format((float)$order->materialConsumptions->sum('total_cost'), 2) }}</td>
+                                    <td class="text-end fw-bold">{{ format_currency((float)$order->materialConsumptions->sum('total_cost')) }}</td>
                                     <td></td>
                                 </tr>
                             </tfoot>
@@ -411,7 +411,7 @@
                         <input type="number" wire:model="rejected_quantity" class="form-control" step="0.01" min="0">
                     </div>
                     <div class="text-muted small">
-                        Total material cost: <strong>{{ number_format((float)$order->materialConsumptions->sum('total_cost'), 2) }}</strong>
+                        Total material cost: <strong>{{ format_currency((float)$order->materialConsumptions->sum('total_cost')) }}</strong>
                     </div>
                 </div>
                 <div class="modal-footer">

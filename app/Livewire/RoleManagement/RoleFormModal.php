@@ -11,6 +11,7 @@ use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class RoleFormModal extends Component
@@ -38,6 +39,11 @@ class RoleFormModal extends Component
         }
     }
 
+    protected function getTenantId(): ?int
+    {
+        return app()->bound('current.tenant') ? app('current.tenant')->id : null;
+    }
+
     public function open(?int $roleId = null): void
     {
         $this->resetValidation();
@@ -58,19 +64,22 @@ class RoleFormModal extends Component
     public function save(): void
     {
         $service = app(RoleService::class);
+        $tenantId = $this->getTenantId();
 
         if ($this->roleId) {
             $rules = (new UpdateRoleRequest)->rules();
-            $rules['slug'][3] = \Illuminate\Validation\Rule::unique('roles', 'slug')->ignore($this->roleId);
+            $rules['slug'][3] = Rule::unique('roles', 'slug')->ignore($this->roleId)->where(fn ($q) => $q->where('tenant_id', $tenantId));
             $validated = $this->validate($rules);
             $role = Role::findOrFail($this->roleId);
             $this->authorize('update', $role);
             $service->update($role, array_merge($validated, ['permission_ids' => $this->permission_ids]));
             $this->dispatch('toast', message: 'Role updated successfully.', type: 'success');
         } else {
-            $validated = $this->validate((new StoreRoleRequest)->rules());
+            $rules = (new StoreRoleRequest)->rules();
+            $rules['slug'][] = Rule::unique('roles', 'slug')->where(fn ($q) => $q->where('tenant_id', $tenantId));
+            $validated = $this->validate($rules);
             $this->authorize('create', Role::class);
-            $service->create(array_merge($validated, ['permission_ids' => $this->permission_ids]));
+            $service->create(array_merge($validated, ['permission_ids' => $this->permission_ids, 'tenant_id' => $tenantId]));
             $this->dispatch('toast', message: 'Role created successfully.', type: 'success');
         }
 

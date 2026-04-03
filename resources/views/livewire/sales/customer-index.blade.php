@@ -44,7 +44,7 @@
                             <td class="fw-medium">{{ $customer->name }}</td>
                             <td>{{ $customer->email ?? '—' }}</td>
                             <td>{{ $customer->phone ?? '—' }}</td>
-                            <td>{{ number_format((float)$customer->credit_limit, 2) }}</td>
+                            <td>{{ format_currency($customer->credit_limit) }}</td>
                             <td>
                                 <span class="badge bg-{{ $customer->is_active ? 'success' : 'danger' }}-transparent">
                                     {{ $customer->is_active ? 'Active' : 'Inactive' }}

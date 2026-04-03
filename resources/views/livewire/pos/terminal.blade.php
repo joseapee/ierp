@@ -1,7 +1,20 @@
-@extends('components.layouts.app')
-
-@section('content')
 <div>
+    @section('title', 'POS Terminal')
+
+    <x-page-header title="POS Terminal" :breadcrumbs="[
+        ['label' => 'Dashboard', 'route' => 'dashboard'],
+        ['label' => 'POS Terminal'],
+    ]">
+        {{-- <x-slot:actions>
+            @can('brands.create')
+                <button class="btn btn-primary btn-wave"
+                        wire:click="$dispatch('openBrandFormModal')">
+                    <i class="ri-add-line me-1"></i> Button
+                </button>
+            @endcan
+        </x-slot:actions> --}}
+    </x-page-header>
+
     <div class="row">
         <div class="col-lg-8">
             <div class="card mb-3">
@@ -17,7 +30,7 @@
                                     <div class="card-body p-2">
                                         <div class="fw-semibold">{{ $product->name }}</div>
                                         <div class="text-muted small">{{ $product->sku }}</div>
-                                        <div class="fw-bold">₦{{ number_format($product->sell_price, 2) }}</div>
+                                        <div class="fw-bold">{{ format_currency($product->sell_price) }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -48,15 +61,15 @@
                 <div class="card-footer">
                     <div class="d-flex justify-content-between">
                         <span>Subtotal:</span>
-                        <span>₦{{ number_format($this->subtotal, 2) }}</span>
+                        <span>{{ format_currency($this->subtotal) }}</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Tax:</span>
-                        <span>₦{{ number_format($this->taxTotal, 2) }}</span>
+                        <span>{{ format_currency($this->taxTotal) }}</span>
                     </div>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Total:</span>
-                        <span>₦{{ number_format($this->grandTotal, 2) }}</span>
+                        <span>{{ format_currency($this->grandTotal) }}</span>
                     </div>
                     <button class="btn btn-primary w-100 mt-2" wire:click="openPaymentModal" @if(empty($cart)) disabled @endif>Checkout</button>
                 </div>
@@ -65,13 +78,13 @@
     </div>
 
     {{-- Product Modal --}}
-    <x-modal wire:model="showProductModal">
+    <x-modal name="product-modal" wire:model="showProductModal">
         <x-slot name="title">Add Product</x-slot>
         @if($selectedProductId)
             @php $product = $products->firstWhere('id', $selectedProductId); @endphp
             <div>
                 <div class="fw-bold mb-2">{{ $product->name }}</div>
-                <div>Price: ₦{{ number_format($product->sell_price, 2) }}</div>
+                <div>Price: {{ format_currency($product->sell_price) }}</div>
                 <div>SKU: {{ $product->sku }}</div>
                 <div class="mt-2">
                     <button class="btn btn-success" wire:click="addToCart({{ $product->id }})">Add to Cart</button>
@@ -82,7 +95,7 @@
     </x-modal>
 
     {{-- Payment Modal --}}
-    <x-modal wire:model="showPaymentModal">
+    <x-modal name="payment-modal" wire:model="showPaymentModal">
         <x-slot name="title">Payment</x-slot>
         <div class="mb-2">
             <label>Customer</label>
@@ -107,32 +120,31 @@
         </div>
         <div class="d-flex justify-content-between fw-bold mb-2">
             <span>Total:</span>
-            <span>₦{{ number_format($this->grandTotal, 2) }}</span>
+            <span>{{ format_currency($this->grandTotal) }}</span>
         </div>
         <button class="btn btn-success w-100" wire:click="processPayment">Complete Sale</button>
         <button class="btn btn-light w-100 mt-2" wire:click="$set('showPaymentModal', false)">Cancel</button>
     </x-modal>
 
     {{-- Receipt Modal --}}
-    <x-modal wire:model="showReceiptModal">
+    <x-modal name="receipt-modal" wire:model="showReceiptModal">
         <x-slot name="title">Receipt</x-slot>
         @if($order)
             <div>
                 <div class="mb-2">Order #: <b>{{ $order->order_number }}</b></div>
-                <div>Date: {{ $order->order_date->format('Y-m-d H:i') }}</div>
+                <div>Date: {{ format_datetime($order->order_date) }}</div>
                 <div class="mt-2">
                     <b>Items:</b>
                     <ul>
                         @foreach($order->items as $item)
-                            <li>{{ $item->product->name }} x {{ $item->quantity }} - ₦{{ number_format($item->unit_price, 2) }}</li>
+                            <li>{{ $item->product->name }} x {{ $item->quantity }} - {{ format_currency($item->unit_price) }}</li>
                         @endforeach
                     </ul>
                 </div>
-                <div class="fw-bold mt-2">Total: ₦{{ number_format($order->total_amount, 2) }}</div>
+                <div class="fw-bold mt-2">Total: {{ format_currency($order->total_amount) }}</div>
                 <button class="btn btn-primary w-100 mt-2" onclick="window.print()">Print Receipt</button>
                 <button class="btn btn-light w-100 mt-2" wire:click="closeReceiptModal">Close</button>
             </div>
         @endif
     </x-modal>
 </div>
-@endsection

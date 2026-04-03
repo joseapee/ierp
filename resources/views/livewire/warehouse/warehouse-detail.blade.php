@@ -126,7 +126,7 @@
                                     <td>{{ $batch->product?->name }}</td>
                                     <td><code>{{ $batch->batch_number ?? '—' }}</code></td>
                                     <td class="text-end">{{ number_format((float) $batch->remaining_quantity, 2) }}</td>
-                                    <td>{{ $batch->expiry_date?->format('Y-m-d') ?? '—' }}</td>
+                                    <td>{{ $batch->expiry_date ? format_date($batch->expiry_date) : '—' }}</td>
                                     <td><span class="badge bg-{{ $batch->status === 'available' ? 'success' : 'warning' }}-transparent">{{ ucfirst($batch->status) }}</span></td>
                                 </tr>
                                 @empty

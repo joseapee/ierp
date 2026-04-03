@@ -111,8 +111,8 @@
                     <tfoot>
                         <tr class="fw-bold">
                             <td colspan="2" class="text-end">Totals:</td>
-                            <td class="text-end">{{ number_format($this->totalDebit, 2) }}</td>
-                            <td class="text-end">{{ number_format($this->totalCredit, 2) }}</td>
+                            <td class="text-end">{{ format_currency($this->totalDebit) }}</td>
+                            <td class="text-end">{{ format_currency($this->totalCredit) }}</td>
                             <td></td>
                         </tr>
                         <tr>
@@ -123,7 +123,7 @@
                                 @elseif($this->totalDebit == 0 && $this->totalCredit == 0)
                                     <span class="badge bg-secondary-transparent">Enter amounts</span>
                                 @else
-                                    <span class="badge bg-danger-transparent">Off by {{ number_format($this->difference, 2) }}</span>
+                                    <span class="badge bg-danger-transparent">Off by {{ format_currency($this->difference) }}</span>
                                 @endif
                             </td>
                             <td></td>

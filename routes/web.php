@@ -21,6 +21,7 @@ use App\Livewire\Catalog\CategoryList;
 use App\Livewire\Catalog\ProductDetail;
 use App\Livewire\Catalog\ProductList;
 use App\Livewire\Catalog\ProductWizard;
+use App\Livewire\Catalog\UnitConversionList;
 use App\Livewire\Catalog\UnitOfMeasureList;
 use App\Livewire\Crm\ActivityIndex;
 use App\Livewire\Crm\ContactForm;
@@ -39,6 +40,7 @@ use App\Livewire\Manufacturing\ProductionOrderDetail;
 use App\Livewire\Manufacturing\ProductionOrderForm;
 use App\Livewire\Manufacturing\ProductionOrderList;
 use App\Livewire\Manufacturing\ProductionStageManager;
+use App\Livewire\POS\PosTerminal;
 use App\Livewire\Procurement\PurchaseOrderDetail;
 use App\Livewire\Procurement\PurchaseOrderForm;
 use App\Livewire\Procurement\PurchaseOrderIndex;
@@ -158,6 +160,9 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                 Route::get('/', UnitOfMeasureList::class)
                     ->middleware('permission:units.view')
                     ->name('index');
+                Route::get('/conversions', UnitConversionList::class)
+                    ->middleware('permission:units.view')
+                    ->name('conversions');
             });
 
         Route::middleware(['subscription', 'permission:products.view'])
@@ -292,14 +297,14 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
                     ->middleware('permission:sales-orders.view')
                     ->name('orders.show');
             });
-        
-            // ── POS ──
-            Route::middleware(['subscription', 'permission:pos.access'])
-                ->prefix('pos')
-                ->name('pos.')
-                ->group(function (): void {
-                    Route::get('/', \App\Livewire\POS\PosTerminal::class)->name('terminal');
-                });
+
+        // ── POS ──
+        Route::middleware(['subscription', 'permission:pos.access'])
+            ->prefix('pos')
+            ->name('pos.')
+            ->group(function (): void {
+                Route::get('/', PosTerminal::class)->name('terminal');
+            });
 
         // ── CRM ──
         Route::middleware(['subscription', 'feature:crm_enabled'])

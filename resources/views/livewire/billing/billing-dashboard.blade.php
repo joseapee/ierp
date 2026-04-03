@@ -50,17 +50,17 @@
                             </div>
                             <ul class="list-unstyled fs-13 text-muted mb-0">
                                 @if($subscription->isTrial() && $subscription->trial_ends_at)
-                                    <li class="mb-1">Trial ends: <strong>{{ $subscription->trial_ends_at->format('M d, Y') }}</strong></li>
+                                    <li class="mb-1">Trial ends: <strong>{{ format_date($subscription->trial_ends_at, 'M d, Y') }}</strong></li>
                                 @endif
                                 <li class="mb-1">
                                     @if($subscription->billing_cycle === 'annual')
-                                        Price: <strong>{{ number_format((float) $currentPlan->annual_price, 2) }}/yr</strong>
+                                        Price: <strong>{{ format_currency((float) $currentPlan->annual_price) }}/yr</strong>
                                     @else
-                                        Price: <strong>{{ number_format((float) $currentPlan->monthly_price, 2) }}/mo</strong>
+                                        Price: <strong>{{ format_currency((float) $currentPlan->monthly_price) }}/mo</strong>
                                     @endif
                                 </li>
                                 @if($subscription->ends_at)
-                                    <li class="mb-1">Next billing: <strong>{{ $subscription->ends_at->format('M d, Y') }}</strong></li>
+                                    <li class="mb-1">Next billing: <strong>{{ format_date($subscription->ends_at, 'M d, Y') }}</strong></li>
                                 @endif
                                 <li>Days remaining: <strong>{{ $subscription->daysRemaining() }}</strong></li>
                             </ul>
@@ -126,11 +126,11 @@
                                     <div class="card-body text-center p-3">
                                         <h6 class="fw-semibold">{{ $plan->name }}</h6>
                                         <div class="mb-2">
-                                            <span class="fs-20 fw-bold">{{ number_format((float) $plan->monthly_price, 0) }}</span>
+                                            <span class="fs-20 fw-bold">{{ format_currency((float) $plan->monthly_price, 0) }}</span>
                                             <span class="text-muted fs-12">/mo</span>
                                         </div>
                                         <div class="text-muted fs-12 mb-3">
-                                            {{ number_format((float) $plan->annual_price, 0) }}/yr
+                                            {{ format_currency((float) $plan->annual_price, 0) }}/yr
                                         </div>
                                         @if($currentPlan && $currentPlan->id === $plan->id)
                                             <span class="badge bg-primary-transparent">Current Plan</span>
@@ -174,8 +174,8 @@
                             <tbody>
                                 @forelse($payments as $payment)
                                     <tr wire:key="payment-{{ $payment->id }}">
-                                        <td>{{ $payment->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $payment->currency }} {{ number_format((float) $payment->amount, 2) }}</td>
+                                        <td>{{ format_date($payment->created_at, 'M d, Y') }}</td>
+                                        <td>{{ $payment->currency }} {{ format_money((float) $payment->amount) }}</td>
                                         <td>{{ ucfirst($payment->payment_method ?? '-') }}</td>
                                         <td>
                                             <span class="badge {{ $payment->status === 'success' ? 'bg-success-transparent' : 'bg-danger-transparent' }}">
@@ -215,8 +215,8 @@
                                 @forelse($invoices as $invoice)
                                     <tr wire:key="invoice-{{ $invoice->id }}">
                                         <td>{{ $invoice->invoice_number }}</td>
-                                        <td>{{ $invoice->issued_at?->format('M d, Y') ?? $invoice->created_at->format('M d, Y') }}</td>
-                                        <td>{{ $invoice->currency }} {{ number_format((float) $invoice->amount, 2) }}</td>
+                                        <td>{{ $invoice->issued_at ? format_date($invoice->issued_at, 'M d, Y') : format_date($invoice->created_at, 'M d, Y') }}</td>
+                                        <td>{{ $invoice->currency }} {{ format_money((float) $invoice->amount) }}</td>
                                         <td>
                                             <span class="badge {{ $invoice->status === 'paid' ? 'bg-success-transparent' : 'bg-warning-transparent' }}">
                                                 {{ ucfirst($invoice->status) }}

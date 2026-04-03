@@ -95,7 +95,7 @@
                                     $lineSub = $lineQty * $linePrice;
                                     $lineTotal = $lineSub + ($lineSub * $lineTax / 100);
                                 @endphp
-                                {{ number_format($lineTotal, 2) }}
+                                {{ format_currency($lineTotal) }}
                             </td>
                             <td class="text-center align-middle">
                                 @if(count($items) > 1)
@@ -110,17 +110,17 @@
                     <tfoot>
                         <tr>
                             <td colspan="5" class="text-end fw-medium">Subtotal:</td>
-                            <td class="text-end">{{ number_format($this->subtotal, 2) }}</td>
+                            <td class="text-end">{{ format_currency($this->subtotal) }}</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-end fw-medium">Tax:</td>
-                            <td class="text-end">{{ number_format($this->taxTotal, 2) }}</td>
+                            <td class="text-end">{{ format_currency($this->taxTotal) }}</td>
                             <td></td>
                         </tr>
                         <tr>
                             <td colspan="5" class="text-end fw-bold">Grand Total:</td>
-                            <td class="text-end fw-bold">{{ number_format($this->grandTotal, 2) }}</td>
+                            <td class="text-end fw-bold">{{ format_currency($this->grandTotal) }}</td>
                             <td></td>
                         </tr>
                     </tfoot>

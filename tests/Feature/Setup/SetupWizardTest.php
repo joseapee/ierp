@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Setup;
 
+use App\Livewire\Setup\SetupWizard;
 use App\Models\Plan;
 use App\Models\Role;
+use App\Models\Tenant;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -37,7 +39,7 @@ class SetupWizardTest extends TestCase
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->set('businessName', 'Test Company')
             ->set('slug', 'test-company')
             ->call('nextStep')
@@ -59,7 +61,7 @@ class SetupWizardTest extends TestCase
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->set('businessName', '')
             ->set('slug', '')
             ->call('nextStep')
@@ -68,11 +70,11 @@ class SetupWizardTest extends TestCase
 
     public function test_setup_validates_unique_slug(): void
     {
-        \App\Models\Tenant::factory()->create(['slug' => 'taken-slug']);
+        Tenant::factory()->create(['slug' => 'taken-slug']);
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->set('businessName', 'Some Name')
             ->set('slug', 'taken-slug')
             ->call('nextStep')
@@ -85,7 +87,7 @@ class SetupWizardTest extends TestCase
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->set('businessName', 'Annual Company')
             ->set('slug', 'annual-company')
             ->call('nextStep')
@@ -104,18 +106,17 @@ class SetupWizardTest extends TestCase
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->assertSet('totalSteps', 2);
     }
 
-    public function test_complete_setup_assigns_tenant_admin_role(): void
+    public function test_complete_setup_assigns_owner_role(): void
     {
         $plan = Plan::factory()->create(['trial_days' => 14]);
-        $adminRole = Role::factory()->create(['slug' => 'tenant-admin', 'tenant_id' => null]);
         $user = User::factory()->create(['tenant_id' => null]);
 
         Livewire::actingAs($user)
-            ->test(\App\Livewire\Setup\SetupWizard::class)
+            ->test(SetupWizard::class)
             ->set('businessName', 'Role Test Co')
             ->set('slug', 'role-test-co')
             ->call('nextStep')
@@ -125,6 +126,11 @@ class SetupWizardTest extends TestCase
             ->assertRedirect(route('onboarding'));
 
         $user->refresh();
-        $this->assertTrue($user->roles->contains($adminRole));
+        $ownerRole = Role::query()
+            ->where('slug', 'owner')
+            ->where('tenant_id', $user->tenant_id)
+            ->first();
+        $this->assertNotNull($ownerRole, 'Owner role should have been seeded for the tenant');
+        $this->assertTrue($user->roles->contains($ownerRole));
     }
 }

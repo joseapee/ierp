@@ -71,7 +71,7 @@
                                     {{ str_replace('_', ' ', ucfirst($order->status)) }}
                                 </span>
                             </td>
-                            <td>{{ $order->created_at->format('Y-m-d') }}</td>
+                            <td>{{ format_date($order->created_at) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('manufacturing.orders.show', $order) }}"
                                    class="btn btn-sm btn-outline-primary btn-wave" wire:navigate>

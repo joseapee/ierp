@@ -63,8 +63,8 @@
                                     @endswitch
                                     ">{{ ucfirst(str_replace('_', ' ', $sub->status)) }}</span>
                             </td>
-                            <td>{{ $sub->starts_at?->format('M d, Y') ?? '-' }}</td>
-                            <td>{{ $sub->ends_at?->format('M d, Y') ?? '-' }}</td>
+                            <td>{{ $sub->starts_at ? format_date($sub->starts_at, 'M d, Y') : '-' }}</td>
+                            <td>{{ $sub->ends_at ? format_date($sub->ends_at, 'M d, Y') : '-' }}</td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
                                     @if($sub->isTrial())

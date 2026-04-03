@@ -94,7 +94,7 @@ class ProductWizard extends Component
 
             $this->type = $product->type;
             $this->name = $product->name;
-            $this->slug = $product->slug;
+            $this->slug = $this->generateSlug($product->name);
             $this->sku = $product->sku;
             $this->category_id = $product->category_id;
             $this->brand_id = $product->brand_id;
@@ -139,8 +139,23 @@ class ProductWizard extends Component
     public function updatedName(): void
     {
         if (! $this->productId) {
-            $this->slug = Str::slug($this->name);
+            $this->slug = $this->generateSlug($this->name);
         }
+    }
+
+    public function generateSlug(string $string): string
+    {
+        $slug = Str::slug($string);
+        $count = Product::query()
+            ->where('slug', $slug)
+            ->where('tenant_id', auth()->user()->tenant_id)
+            ->count();
+
+        if ($count > 0) {
+            $slug .= '-'.($count + 1);
+        }
+
+        return $slug;
     }
 
     public function updatedType(): void
@@ -311,7 +326,7 @@ class ProductWizard extends Component
             1 => $this->validate(['type' => 'required|in:standard,variable,service,bundle,manufactured']),
             2 => $this->validate([
                 'name' => 'required|string|max:255',
-                'slug' => 'required|string|max:255',
+                // 'slug' => 'required|string|max:255',
                 'sku' => 'required|string|max:100',
                 'base_unit_id' => 'required|integer|exists:units_of_measure,id',
             ]),

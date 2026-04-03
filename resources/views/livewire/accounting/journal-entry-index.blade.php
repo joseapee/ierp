@@ -52,7 +52,7 @@
                         @forelse($entries as $entry)
                         <tr wire:key="je-{{ $entry->id }}">
                             <td><code>{{ $entry->entry_number }}</code></td>
-                            <td>{{ $entry->date->format('Y-m-d') }}</td>
+                            <td>{{ format_date($entry->date) }}</td>
                             <td>
                                 <span class="d-inline-block text-truncate" style="max-width:300px;">{{ $entry->description }}</span>
                                 @if($entry->source_type)
@@ -60,7 +60,7 @@
                                 @endif
                             </td>
                             <td>{{ $entry->reference ?? '—' }}</td>
-                            <td class="text-end">{{ number_format((float) $entry->lines->sum('debit'), 2) }}</td>
+                            <td class="text-end">{{ format_currency((float) $entry->lines->sum('debit')) }}</td>
                             <td>
                                 @php
                                     $statusColors = ['draft' => 'warning', 'posted' => 'success', 'voided' => 'danger'];

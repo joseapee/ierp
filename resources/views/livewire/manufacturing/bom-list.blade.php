@@ -55,7 +55,7 @@
                                     $cost = $bom->items->sum(fn($item) => (float)$item->quantity * (float)$item->unit_cost * (1 + (float)$item->wastage_percentage / 100));
                                     $yieldQty = (float)$bom->yield_quantity ?: 1;
                                 @endphp
-                                {{ number_format($cost / $yieldQty, 2) }}
+                                {{ format_currency($cost / $yieldQty) }}
                             </td>
                             <td>
                                 <span class="badge bg-{{ $bom->status === 'active' ? 'success' : ($bom->status === 'draft' ? 'warning' : 'secondary') }}-transparent">

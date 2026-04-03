@@ -7,7 +7,9 @@ namespace App\Livewire\Setup;
 use App\Models\Plan;
 use App\Models\Role;
 use App\Models\Tenant;
+use App\Services\RoleService;
 use App\Services\SubscriptionService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -31,7 +33,7 @@ class SetupWizard extends Component
 
     public function mount(): void
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         // If user already has a tenant with completed setup, move forward
         if ($user->tenant_id !== null) {
@@ -49,7 +51,15 @@ class SetupWizard extends Component
 
     public function updatedBusinessName(string $value): void
     {
-        $this->slug = Str::slug($value);
+        // check if slug exists and assign a unique slug if it does
+        $slug = Str::slug($value);
+        $count = Tenant::query()->where('slug', 'like', "$slug%")->count();
+
+        if ($count > 0) {
+            $slug .= '-'.($count + 1);
+        }
+
+        $this->slug = $slug;
     }
 
     public function nextStep(): void
@@ -86,13 +96,27 @@ class SetupWizard extends Component
             'setup_completed_at' => now(),
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
         $user->update(['tenant_id' => $tenant->id]);
 
-        // Assign the tenant-admin role to the tenant creator
-        $adminRole = Role::query()->where('slug', 'tenant-admin')->whereNull('tenant_id')->first();
-        if ($adminRole) {
-            $user->assignRole($adminRole);
+        // Seed system roles for this tenant if not present (skip for demo tenant)
+        if ($tenant->roles()->count() === 0) {
+            app(RoleService::class)->seedSystemRolesForTenant($tenant);
+        }
+
+        // Assign the owner role to the tenant creator
+        $ownerRole = Role::query()
+            ->where('slug', 'owner')
+            ->where('tenant_id', $tenant->id)
+            ->first();
+
+        if ($ownerRole) {
+            $user->assignRole($ownerRole);
+        } else {
+            // return an error if owner role is not found (should not happen since we seed it on tenant creation)
+            $this->addError('roleAssignment', 'Owner role not found. Please contact support.');
+
+            return;
         }
 
         $subscriptionService = app(SubscriptionService::class);

@@ -6,6 +6,11 @@
         ['label' => 'Units of Measure'],
     ]">
         <x-slot:actions>
+            @can('units.view')
+                <a href="{{ route('units.conversions') }}" class="btn btn-outline-primary btn-wave">
+                    <i class="ri-exchange-line me-1"></i> Conversions
+                </a>
+            @endcan
             @can('units.create')
                 <button class="btn btn-primary btn-wave"
                         wire:click="$dispatch('openUnitFormModal')">

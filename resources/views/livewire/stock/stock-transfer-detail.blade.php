@@ -80,7 +80,7 @@
                                 <tr>
                                     <td>{{ $item->product?->name }}{{ $item->productVariant ? ' - ' . $item->productVariant->name : '' }}</td>
                                     <td class="text-end">{{ number_format((float) $item->quantity, 2) }}</td>
-                                    <td class="text-end">{{ number_format((float) $item->unit_cost, 4) }}</td>
+                                    <td class="text-end">{{ format_currency((float) $item->unit_cost, 4) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>

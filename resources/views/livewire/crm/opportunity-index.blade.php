@@ -67,9 +67,9 @@
                                 </span>
                                 @endif
                             </td>
-                            <td class="text-end">{{ number_format((float)$opp->expected_value, 2) }}</td>
+                            <td class="text-end">{{ format_currency((float)$opp->expected_value) }}</td>
                             <td class="text-end">{{ number_format((float)$opp->probability, 0) }}%</td>
-                            <td>{{ $opp->expected_close_date?->format('Y-m-d') ?? '—' }}</td>
+                            <td>{{ $opp->expected_close_date ? format_date($opp->expected_close_date) : '—' }}</td>
                             <td>{{ $opp->assignedUser?->name ?? '—' }}</td>
                             <td class="text-end">
                                 @can('opportunities.edit')

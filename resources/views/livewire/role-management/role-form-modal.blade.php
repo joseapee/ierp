@@ -27,7 +27,9 @@
                                        wire:model="slug"
                                        class="form-control @error('slug') is-invalid @enderror"
                                        data-bs-toggle="tooltip"
-                                       title="Unique identifier (auto-generated from name)">
+                                       title="Unique identifier (auto-generated from name)"
+                                       readonly disabled style="background:#f8f9fa;">
+                                <div class="form-text">Slug is auto-generated and cannot be changed.</div>
                                 @error('slug') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                             <div class="col-12">

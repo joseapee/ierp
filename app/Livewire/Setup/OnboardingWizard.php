@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Setup;
 
+use App\Models\Category;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Warehouse;
+use App\Services\UnitOfMeasureService;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -60,6 +65,7 @@ class OnboardingWizard extends Component
         $tenant = app()->bound('current.tenant') ? app('current.tenant') : null;
 
         if ($tenant) {
+
             // Redirect to dashboard if onboarding is already complete
             if ($tenant->onboarding_completed_at !== null) {
                 $this->redirect(route('dashboard'), navigate: true);
@@ -134,6 +140,8 @@ class OnboardingWizard extends Component
     public function completeOnboarding(): void
     {
         $tenant = app('current.tenant');
+        $unitService = app(UnitOfMeasureService::class);
+        $unitService->seedDefaultUnitsForTenant($tenant);
         $tenant->update(['onboarding_completed_at' => now()]);
 
         $this->redirect(route('dashboard'), navigate: true);
@@ -171,7 +179,7 @@ class OnboardingWizard extends Component
 
     protected function saveWarehouse(mixed $tenant): void
     {
-        \App\Models\Warehouse::firstOrCreate(
+        Warehouse::firstOrCreate(
             ['tenant_id' => $tenant->id, 'code' => Str::upper(Str::slug($this->warehouseName, '-'))],
             [
                 'name' => $this->warehouseName,
@@ -186,7 +194,7 @@ class OnboardingWizard extends Component
     {
         $tenant = app('current.tenant');
 
-        $user = \App\Models\User::firstOrCreate(
+        $user = User::firstOrCreate(
             ['email' => $this->inviteEmail],
             [
                 'tenant_id' => $tenant->id,
@@ -196,7 +204,7 @@ class OnboardingWizard extends Component
             ]
         );
 
-        $role = \App\Models\Role::find($this->inviteRoleId);
+        $role = Role::find($this->inviteRoleId);
         if ($role && ! $user->roles->contains($role)) {
             $user->roles()->attach($role);
         }
@@ -208,8 +216,18 @@ class OnboardingWizard extends Component
 
     protected function saveCategory(mixed $tenant): void
     {
-        \App\Models\Category::firstOrCreate(
-            ['tenant_id' => $tenant->id, 'slug' => Str::slug($this->categoryName)],
+        $slug = Str::slug($this->categoryName);
+        $count = Category::query()
+            ->where('slug', $slug)
+            ->where('tenant_id', $tenant->id)
+            ->count();
+
+        if ($count > 0) {
+            $slug .= '-'.($count + 1);
+        }
+
+        Category::firstOrCreate(
+            ['tenant_id' => $tenant->id, 'slug' => $slug],
             ['name' => $this->categoryName]
         );
     }
@@ -217,7 +235,7 @@ class OnboardingWizard extends Component
     public function render(): mixed
     {
         return view('livewire.setup.onboarding-wizard', [
-            'roles' => \App\Models\Role::query()
+            'roles' => Role::query()
                 ->where(function ($q) {
                     $q->whereNull('tenant_id')->orWhere('tenant_id', auth()->user()->tenant_id);
                 })

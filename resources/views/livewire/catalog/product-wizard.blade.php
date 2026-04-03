@@ -80,11 +80,11 @@
                     <input type="text" wire:model.live.debounce.300ms="name" class="form-control @error('name') is-invalid @enderror">
                     @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                 </div>
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                     <label class="form-label">Slug <span class="text-danger">*</span> <i class="ri-information-line text-muted ms-1" data-bs-toggle="tooltip" title="URL-friendly identifier, auto-generated from the product name"></i></label>
-                    <input type="text" wire:model="slug" class="form-control @error('slug') is-invalid @enderror">
+                    <input type="text" wire:model="slug" readonly class="form-control @error('slug') is-invalid @enderror">
                     @error('slug') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                </div>
+                </div> --}}
                 <div class="col-md-3">
                     <label class="form-label">SKU <span class="text-danger">*</span> <i class="ri-information-line text-muted ms-1" data-bs-toggle="tooltip" title="Stock Keeping Unit — a unique code to identify this product in inventory"></i></label>
                     <input type="text" wire:model="sku" class="form-control @error('sku') is-invalid @enderror">
@@ -259,7 +259,7 @@
                                     $waste = (float)($item['wastage_percentage'] ?? 0);
                                     $lineTotal = $qty * $cost * (1 + $waste/100);
                                 @endphp
-                                {{ number_format($lineTotal, 2) }}
+                                {{ format_currency($lineTotal) }}
                             </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-outline-danger" wire:click="removeBomItem({{ $i }})">
@@ -277,7 +277,7 @@
                     <tfoot>
                         <tr class="fw-bold">
                             <td colspan="4" class="text-end">Total Material Cost:</td>
-                            <td class="text-end">{{ number_format((float)$cost_price, 2) }}</td>
+                            <td class="text-end">{{ format_currency((float)$cost_price) }}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -362,8 +362,8 @@
                         <div class="card-body">
                             <h6 class="text-muted mb-3">Pricing</h6>
                             <dl class="row mb-0">
-                                <dt class="col-sm-4">Cost</dt><dd class="col-sm-8">{{ number_format((float)$cost_price, 2) }}</dd>
-                                <dt class="col-sm-4">Sell Price</dt><dd class="col-sm-8">{{ number_format((float)$sell_price, 2) }}</dd>
+                                <dt class="col-sm-4">Cost</dt><dd class="col-sm-8">{{ format_currency((float)$cost_price) }}</dd>
+                                <dt class="col-sm-4">Sell Price</dt><dd class="col-sm-8">{{ format_currency((float)$sell_price) }}</dd>
                                 <dt class="col-sm-4">Mode</dt><dd class="col-sm-8">{{ ucfirst(str_replace('_', ' ', $pricing_mode)) }}</dd>
                             </dl>
                         </div>
@@ -386,8 +386,8 @@
                                     <tr>
                                         <td>{{ $mat?->name ?? 'Unknown' }}</td>
                                         <td>{{ $q }}</td>
-                                        <td>{{ number_format($c, 2) }}</td>
-                                        <td class="text-end">{{ number_format($q * $c, 2) }}</td>
+                                        <td>{{ format_currency($c) }}</td>
+                                        <td class="text-end">{{ format_currency($q * $c) }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

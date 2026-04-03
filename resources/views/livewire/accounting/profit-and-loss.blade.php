@@ -49,7 +49,7 @@
                                         <code>{{ $item->code }}</code>
                                         <span class="ms-1">{{ $item->name }}</span>
                                     </td>
-                                    <td class="text-end">{{ number_format($item->balance, 2) }}</td>
+                                    <td class="text-end">{{ format_currency($item->balance) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="2" class="text-center text-muted py-3">No revenue recorded</td></tr>
@@ -58,7 +58,7 @@
                             <tfoot>
                                 <tr class="fw-bold table-light">
                                     <td>Total Revenue</td>
-                                    <td class="text-end">{{ number_format($report['total_revenue'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['total_revenue']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -86,7 +86,7 @@
                                         <code>{{ $item->code }}</code>
                                         <span class="ms-1">{{ $item->name }}</span>
                                     </td>
-                                    <td class="text-end">{{ number_format($item->balance, 2) }}</td>
+                                    <td class="text-end">{{ format_currency($item->balance) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="2" class="text-center text-muted py-3">No expenses recorded</td></tr>
@@ -95,7 +95,7 @@
                             <tfoot>
                                 <tr class="fw-bold table-light">
                                     <td>Total Expenses</td>
-                                    <td class="text-end">{{ number_format($report['total_expenses'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['total_expenses']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -111,18 +111,18 @@
             <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
                 <div class="text-center">
                     <div class="text-muted fs-12">Total Revenue</div>
-                    <div class="fw-bold fs-16 text-success">{{ number_format($report['total_revenue'], 2) }}</div>
+                    <div class="fw-bold fs-16 text-success">{{ format_currency($report['total_revenue']) }}</div>
                 </div>
                 <div class="fs-20 fw-bold text-muted">−</div>
                 <div class="text-center">
                     <div class="text-muted fs-12">Total Expenses</div>
-                    <div class="fw-bold fs-16 text-danger">{{ number_format($report['total_expenses'], 2) }}</div>
+                    <div class="fw-bold fs-16 text-danger">{{ format_currency($report['total_expenses']) }}</div>
                 </div>
                 <div class="fs-20 fw-bold text-muted">=</div>
                 <div class="text-center">
                     <div class="text-muted fs-12">Net {{ $report['net_profit'] >= 0 ? 'Profit' : 'Loss' }}</div>
                     <div class="fw-bold fs-20 {{ $report['net_profit'] >= 0 ? 'text-success' : 'text-danger' }}">
-                        {{ number_format(abs($report['net_profit']), 2) }}
+                        {{ format_currency(abs($report['net_profit'])) }}
                     </div>
                 </div>
             </div>

@@ -44,12 +44,12 @@
                     <tbody>
                         @forelse($entries as $entry)
                         <tr wire:key="sl-{{ $entry->id }}">
-                            <td>{{ $entry->created_at->format('Y-m-d H:i') }}</td>
+                            <td>{{ format_datetime($entry->created_at) }}</td>
                             <td>{{ $entry->product?->name }}</td>
                             <td>{{ $entry->warehouse?->name }}</td>
                             <td><span class="badge bg-{{ $entry->quantity >= 0 ? 'success' : 'danger' }}-transparent">{{ str_replace('_', ' ', ucfirst($entry->movement_type)) }}</span></td>
                             <td class="text-end {{ $entry->quantity >= 0 ? 'text-success' : 'text-danger' }}">{{ $entry->quantity >= 0 ? '+' : '' }}{{ number_format((float) $entry->quantity, 2) }}</td>
-                            <td class="text-end">{{ number_format((float) $entry->unit_cost, 4) }}</td>
+                            <td class="text-end">{{ format_currency((float) $entry->unit_cost, 4) }}</td>
                             <td class="text-end fw-medium">{{ number_format((float) $entry->running_balance, 2) }}</td>
                             <td>{{ $entry->createdBy?->name ?? '—' }}</td>
                         </tr>

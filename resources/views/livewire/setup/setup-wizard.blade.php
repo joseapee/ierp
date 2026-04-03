@@ -84,20 +84,20 @@
                                     @endif
                                     <div class="mb-2">
                                         @if($billingCycle === 'monthly')
-                                            <span class="fs-20 fw-bold text-primary">{{ number_format($plan->monthly_price, 0) }}</span>
+                                            <span class="fs-20 fw-bold text-primary">{{ format_currency($plan->monthly_price, 0) }}</span>
                                             <span class="text-muted fs-12">/month</span>
                                         @else
-                                            <span class="fs-20 fw-bold text-primary">{{ number_format($plan->annual_price, 0) }}</span>
+                                            <span class="fs-20 fw-bold text-primary">{{ format_currency($plan->annual_price, 0) }}</span>
                                             <span class="text-muted fs-12">/year</span>
                                         @endif
                                     </div>
                                     @if($billingCycle === 'monthly' && $plan->annual_price)
                                         <div class="text-muted fs-12 mb-2">
-                                            or {{ number_format($plan->annual_price, 0) }}/year
+                                            or {{ format_currency($plan->annual_price, 0) }}/year
                                         </div>
                                     @elseif($billingCycle === 'annual' && $plan->monthly_price)
                                         <div class="text-muted fs-12 mb-2">
-                                            or {{ number_format($plan->monthly_price, 0) }}/month
+                                            or {{ format_currency($plan->monthly_price, 0) }}/month
                                         </div>
                                     @endif
                                     @if($plan->trial_days > 0)

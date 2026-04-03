@@ -72,7 +72,7 @@
                                     <td>{{ $item->product?->name }}{{ $item->productVariant ? ' - ' . $item->productVariant->name : '' }}</td>
                                     <td><span class="badge bg-{{ $item->type === 'addition' ? 'success' : 'danger' }}-transparent">{{ ucfirst($item->type) }}</span></td>
                                     <td class="text-end">{{ number_format((float) $item->quantity, 2) }}</td>
-                                    <td class="text-end">{{ number_format((float) $item->unit_cost, 4) }}</td>
+                                    <td class="text-end">{{ format_currency((float) $item->unit_cost, 4) }}</td>
                                     <td>{{ $item->reason ?? '—' }}</td>
                                 </tr>
                                 @endforeach

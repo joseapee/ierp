@@ -49,8 +49,8 @@
                                 <span class="fw-semibold">{{ $plan->name }}</span>
                             </td>
                             <td class="text-muted fs-12">{{ $plan->slug }}</td>
-                            <td>{{ number_format((float) $plan->monthly_price, 2) }}</td>
-                            <td>{{ number_format((float) $plan->annual_price, 2) }}</td>
+                            <td>{{ format_currency((float) $plan->monthly_price) }}</td>
+                            <td>{{ format_currency((float) $plan->annual_price) }}</td>
                             <td>{{ $plan->trial_days }}</td>
                             <td>
                                 <span class="badge bg-primary-transparent">{{ $plan->subscriptions_count ?? 0 }}</span>

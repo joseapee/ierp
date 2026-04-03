@@ -64,14 +64,14 @@
                             <td>
                                 @if($activity->due_date)
                                     <span class="{{ $activity->status === 'pending' && $activity->due_date->isPast() ? 'text-danger fw-bold' : '' }}">
-                                        {{ $activity->due_date->format('Y-m-d H:i') }}
+                                        {{ format_datetime($activity->due_date) }}
                                     </span>
                                 @else
                                     —
                                 @endif
                             </td>
                             <td>{{ $activity->assignedUser?->name ?? '—' }}</td>
-                            <td>{{ $activity->completed_at?->format('Y-m-d H:i') ?? '—' }}</td>
+                            <td>{{ format_datetime($activity->completed_at) }}</td>
                         </tr>
                         @empty
                         <tr>

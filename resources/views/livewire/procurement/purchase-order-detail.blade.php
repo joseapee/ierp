@@ -52,8 +52,8 @@
                                 {{ str_replace('_', ' ', ucfirst($purchaseOrder->status)) }}
                             </span>
                         </div>
-                        <div class="col-md-4"><span class="text-muted">Order Date:</span><br>{{ $purchaseOrder->order_date?->format('Y-m-d') }}</div>
-                        <div class="col-md-4"><span class="text-muted">Expected Date:</span><br>{{ $purchaseOrder->expected_date?->format('Y-m-d') ?? '—' }}</div>
+                        <div class="col-md-4"><span class="text-muted">Order Date:</span><br>{{ format_date($purchaseOrder->order_date) }}</div>
+                        <div class="col-md-4"><span class="text-muted">Expected Date:</span><br>{{ format_date($purchaseOrder->expected_date) }}</div>
                         @if($purchaseOrder->notes)
                         <div class="col-12"><span class="text-muted">Notes:</span><br>{{ $purchaseOrder->notes }}</div>
                         @endif
@@ -67,16 +67,16 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal:</span>
-                        <span>{{ number_format((float)$purchaseOrder->subtotal, 2) }}</span>
+                        <span>{{ format_currency($purchaseOrder->subtotal) }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Tax:</span>
-                        <span>{{ number_format((float)$purchaseOrder->tax_amount, 2) }}</span>
+                        <span>{{ format_currency($purchaseOrder->tax_amount) }}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Total:</span>
-                        <span>{{ number_format((float)$purchaseOrder->total_amount, 2) }}</span>
+                        <span>{{ format_currency($purchaseOrder->total_amount) }}</span>
                     </div>
                 </div>
             </div>
@@ -106,9 +106,9 @@
                             <td>{{ $item->product?->name }}</td>
                             <td>{{ $item->warehouse?->name }}</td>
                             <td class="text-end">{{ number_format((float)$item->quantity, 4) }}</td>
-                            <td class="text-end">{{ number_format((float)$item->unit_price, 2) }}</td>
-                            <td class="text-end">{{ number_format((float)$item->tax_amount, 2) }}</td>
-                            <td class="text-end">{{ number_format((float)$item->total, 2) }}</td>
+                            <td class="text-end">{{ format_currency($item->unit_price) }}</td>
+                            <td class="text-end">{{ format_currency($item->tax_amount) }}</td>
+                            <td class="text-end">{{ format_currency($item->total) }}</td>
                             <td class="text-end">
                                 <span class="{{ (float)$item->quantity_received >= (float)$item->quantity ? 'text-success' : '' }}">
                                     {{ number_format((float)$item->quantity_received, 4) }}

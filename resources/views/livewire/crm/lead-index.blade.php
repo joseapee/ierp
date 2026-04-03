@@ -80,7 +80,7 @@
                                     {{ str_replace('_', ' ', ucfirst($lead->status)) }}
                                 </span>
                             </td>
-                            <td class="text-end">{{ number_format((float)$lead->estimated_value, 2) }}</td>
+                            <td class="text-end">{{ format_currency((float)$lead->estimated_value) }}</td>
                             <td>{{ $lead->assignedUser?->name ?? '—' }}</td>
                             <td class="text-end">
                                 @can('leads.edit')

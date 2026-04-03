@@ -52,8 +52,8 @@
                                 {{ str_replace('_', ' ', ucfirst($order->status)) }}
                             </span>
                         </div>
-                        <div class="col-md-4"><span class="text-muted">Order Date:</span><br>{{ $order->order_date?->format('Y-m-d') }}</div>
-                        <div class="col-md-4"><span class="text-muted">Due Date:</span><br>{{ $order->due_date?->format('Y-m-d') ?? '—' }}</div>
+                        <div class="col-md-4"><span class="text-muted">Order Date:</span><br>{{ format_date($order->order_date) }}</div>
+                        <div class="col-md-4"><span class="text-muted">Due Date:</span><br>{{ format_date($order->due_date) }}</div>
                         @if($order->notes)
                         <div class="col-12"><span class="text-muted">Notes:</span><br>{{ $order->notes }}</div>
                         @endif
@@ -67,22 +67,22 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Subtotal:</span>
-                        <span>{{ number_format((float)$order->subtotal, 2) }}</span>
+                        <span>{{ format_currency($order->subtotal) }}</span>
                     </div>
                     @if((float)$order->discount_amount > 0)
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Discount:</span>
-                        <span class="text-danger">-{{ number_format((float)$order->discount_amount, 2) }}</span>
+                        <span class="text-danger">-{{ format_currency($order->discount_amount) }}</span>
                     </div>
                     @endif
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Tax:</span>
-                        <span>{{ number_format((float)$order->tax_amount, 2) }}</span>
+                        <span>{{ format_currency($order->tax_amount) }}</span>
                     </div>
                     <hr>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Total:</span>
-                        <span>{{ number_format((float)$order->total_amount, 2) }}</span>
+                        <span>{{ format_currency($order->total_amount) }}</span>
                     </div>
                 </div>
             </div>
@@ -113,10 +113,10 @@
                             <td>{{ $item->product?->name }}</td>
                             <td>{{ $item->warehouse?->name }}</td>
                             <td class="text-end">{{ number_format((float)$item->quantity, 4) }}</td>
-                            <td class="text-end">{{ number_format((float)$item->unit_price, 2) }}</td>
+                            <td class="text-end">{{ format_currency($item->unit_price) }}</td>
                             <td class="text-end">{{ number_format((float)$item->discount_percent, 2) }}%</td>
-                            <td class="text-end">{{ number_format((float)$item->tax_amount, 2) }}</td>
-                            <td class="text-end">{{ number_format((float)$item->total, 2) }}</td>
+                            <td class="text-end">{{ format_currency($item->tax_amount) }}</td>
+                            <td class="text-end">{{ format_currency($item->total) }}</td>
                             <td class="text-end">
                                 <span class="{{ (float)$item->quantity_fulfilled >= (float)$item->quantity ? 'text-success' : '' }}">
                                     {{ number_format((float)$item->quantity_fulfilled, 4) }}

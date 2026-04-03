@@ -25,7 +25,7 @@
                     <div class="mb-2"><span class="text-muted">Email:</span><br>{{ $customer->email ?? '—' }}</div>
                     <div class="mb-2"><span class="text-muted">Phone:</span><br>{{ $customer->phone ?? '—' }}</div>
                     <div class="mb-2"><span class="text-muted">Tax ID:</span><br>{{ $customer->tax_id ?? '—' }}</div>
-                    <div class="mb-2"><span class="text-muted">Credit Limit:</span><br>{{ number_format((float)$customer->credit_limit, 2) }}</div>
+                    <div class="mb-2"><span class="text-muted">Credit Limit:</span><br>{{ format_currency($customer->credit_limit) }}</div>
                     <div class="mb-2"><span class="text-muted">Payment Terms:</span><br>{{ $customer->payment_terms }} days</div>
                     <div class="mb-2">
                         <span class="text-muted">Status:</span><br>
@@ -107,8 +107,8 @@
                                         </span>
                                         @endif
                                     </td>
-                                    <td class="text-end">{{ number_format((float)$opp->expected_value, 2) }}</td>
-                                    <td>{{ $opp->expected_close_date?->format('Y-m-d') ?? '—' }}</td>
+                                    <td class="text-end">{{ format_currency($opp->expected_value) }}</td>
+                                    <td>{{ format_date($opp->expected_close_date) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="4" class="text-center text-muted py-3">No opportunities.</td></tr>
@@ -147,8 +147,8 @@
                                             {{ str_replace('_', ' ', ucfirst($order->status)) }}
                                         </span>
                                     </td>
-                                    <td class="text-end">{{ number_format((float)$order->total_amount, 2) }}</td>
-                                    <td>{{ $order->order_date?->format('Y-m-d') ?? $order->created_at?->format('Y-m-d') }}</td>
+                                    <td class="text-end">{{ format_currency($order->total_amount) }}</td>
+                                    <td>{{ format_date($order->order_date ?? $order->created_at) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="4" class="text-center text-muted py-3">No sales orders.</td></tr>

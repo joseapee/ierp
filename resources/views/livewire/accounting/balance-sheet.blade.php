@@ -45,7 +45,7 @@
                                         <code>{{ $item->code }}</code>
                                         <span class="ms-1">{{ $item->name }}</span>
                                     </td>
-                                    <td class="text-end">{{ number_format($item->balance, 2) }}</td>
+                                    <td class="text-end">{{ format_currency($item->balance) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="2" class="text-center text-muted py-3">No asset accounts</td></tr>
@@ -54,7 +54,7 @@
                             <tfoot>
                                 <tr class="fw-bold table-light">
                                     <td>Total Assets</td>
-                                    <td class="text-end">{{ number_format($report['total_assets'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['total_assets']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -82,7 +82,7 @@
                                         <code>{{ $item->code }}</code>
                                         <span class="ms-1">{{ $item->name }}</span>
                                     </td>
-                                    <td class="text-end">{{ number_format($item->balance, 2) }}</td>
+                                    <td class="text-end">{{ format_currency($item->balance) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="2" class="text-center text-muted py-3">No liability accounts</td></tr>
@@ -91,7 +91,7 @@
                             <tfoot>
                                 <tr class="fw-bold table-light">
                                     <td>Total Liabilities</td>
-                                    <td class="text-end">{{ number_format($report['total_liabilities'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['total_liabilities']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -116,7 +116,7 @@
                                         <code>{{ $item->code }}</code>
                                         <span class="ms-1">{{ $item->name }}</span>
                                     </td>
-                                    <td class="text-end">{{ number_format($item->balance, 2) }}</td>
+                                    <td class="text-end">{{ format_currency($item->balance) }}</td>
                                 </tr>
                                 @empty
                                 <tr><td colspan="2" class="text-center text-muted py-3">No equity accounts</td></tr>
@@ -124,14 +124,14 @@
                                 @if(abs($report['retained_earnings']) > 0.01)
                                 <tr class="table-light">
                                     <td><em>Retained Earnings (calculated)</em></td>
-                                    <td class="text-end">{{ number_format($report['retained_earnings'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['retained_earnings']) }}</td>
                                 </tr>
                                 @endif
                             </tbody>
                             <tfoot>
                                 <tr class="fw-bold table-light">
                                     <td>Total Equity</td>
-                                    <td class="text-end">{{ number_format($report['total_equity'], 2) }}</td>
+                                    <td class="text-end">{{ format_currency($report['total_equity']) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -147,24 +147,24 @@
             <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
                 <div class="text-center">
                     <div class="text-muted fs-12">Total Assets</div>
-                    <div class="fw-bold fs-16">{{ number_format($report['total_assets'], 2) }}</div>
+                    <div class="fw-bold fs-16">{{ format_currency($report['total_assets']) }}</div>
                 </div>
                 <div class="fs-20 fw-bold text-muted">=</div>
                 <div class="text-center">
                     <div class="text-muted fs-12">Total Liabilities</div>
-                    <div class="fw-bold fs-16">{{ number_format($report['total_liabilities'], 2) }}</div>
+                    <div class="fw-bold fs-16">{{ format_currency($report['total_liabilities']) }}</div>
                 </div>
                 <div class="fs-20 fw-bold text-muted">+</div>
                 <div class="text-center">
                     <div class="text-muted fs-12">Total Equity</div>
-                    <div class="fw-bold fs-16">{{ number_format($report['total_equity'], 2) }}</div>
+                    <div class="fw-bold fs-16">{{ format_currency($report['total_equity']) }}</div>
                 </div>
                 <div class="ms-3">
                     @php $diff = abs($report['total_assets'] - ($report['total_liabilities'] + $report['total_equity'])); @endphp
                     @if($diff < 0.01)
                         <span class="badge bg-success-transparent px-3 py-2">Equation balanced</span>
                     @else
-                        <span class="badge bg-danger-transparent px-3 py-2">Off by {{ number_format($diff, 2) }}</span>
+                        <span class="badge bg-danger-transparent px-3 py-2">Off by {{ format_currency($diff) }}</span>
                     @endif
                 </div>
             </div>

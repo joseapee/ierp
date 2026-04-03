@@ -2,29 +2,70 @@
 
 declare(strict_types=1);
 
-namespace Database\Seeders;
+namespace App\Services;
 
-use App\Models\Tenant;
 use App\Models\UnitConversion;
 use App\Models\UnitOfMeasure;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Collection;
 
-class UnitOfMeasureSeeder extends Seeder
+class UnitOfMeasureService
 {
-    public function run(): void
+    /**
+     * Get all units of measure for the current tenant scope.
+     */
+    public function all(): Collection
     {
-        $tenants = Tenant::query()->get();
+        $tenantId = app()->bound('current.tenant') ? app('current.tenant')->id : null;
 
-        foreach ($tenants as $tenant) {
-            $this->command->info("Seeding units of measure for tenant: {$tenant->name}");
-            $this->seedUnitsForTenant($tenant);
-        }
+        return UnitOfMeasure::query()
+            ->where('tenant_id', $tenantId)
+            ->orderBy('name')
+            ->get();
     }
 
-    private function seedUnitsForTenant(Tenant $tenant): void
+    /**
+     * Create a new unit of measure.
+     */
+    public function create(array $data): UnitOfMeasure
     {
-        $tid = $tenant->id;
+        $tenantId = app()->bound('current.tenant') ? app('current.tenant')->id : null;
 
+        return UnitOfMeasure::query()->create([
+            'tenant_id' => $tenantId,
+            'name' => $data['name'],
+            'abbreviation' => $data['abbreviation'],
+            'type' => $data['type'],
+            'is_base_unit' => $data['is_base_unit'] ?? false,
+            'is_active' => $data['is_active'] ?? true,
+        ]);
+    }
+
+    /**
+     * Update an existing unit of measure.
+     */
+    public function update(UnitOfMeasure $unit, array $data): UnitOfMeasure
+    {
+        $unit->update([
+            'name' => $data['name'],
+            'abbreviation' => $data['abbreviation'],
+            'type' => $data['type'],
+            'is_base_unit' => $data['is_base_unit'] ?? false,
+            'is_active' => $data['is_active'] ?? true,
+        ]);
+
+        return $unit;
+    }
+
+    /**
+     * Delete a unit of measure.
+     */
+    public function delete(UnitOfMeasure $unit): void
+    {
+        $unit->delete();
+    }
+
+    public function seedDefaultUnitsForTenant($tenant): void
+    {
         $units = [
             ['name' => 'Piece', 'abbreviation' => 'pcs', 'type' => 'quantity', 'is_base_unit' => true],
             ['name' => 'Box', 'abbreviation' => 'box', 'type' => 'quantity', 'is_base_unit' => false],
@@ -39,6 +80,7 @@ class UnitOfMeasureSeeder extends Seeder
 
         $created = [];
         foreach ($units as $unit) {
+            // Delete Existing unit if it exists to avoid duplicates
             $existing = UnitOfMeasure::query()
                 ->where('tenant_id', $tenant->id)
                 ->where('abbreviation', $unit['abbreviation'])
@@ -46,7 +88,7 @@ class UnitOfMeasureSeeder extends Seeder
 
             if (! $existing) {
                 $created[$unit['abbreviation']] = UnitOfMeasure::query()->create(
-                    array_merge($unit, ['tenant_id' => $tid])
+                    array_merge($unit, ['tenant_id' => $tenant->id])
                 );
             } else {
                 $created[$unit['abbreviation']] = $existing;
@@ -64,14 +106,14 @@ class UnitOfMeasureSeeder extends Seeder
         foreach ($conversions as $conv) {
             // Delete existing conversion if it exists to avoid duplicates
             UnitConversion::query()
-                ->where('tenant_id', $tid)
+                ->where('tenant_id', $tenant->id)
                 ->where('from_unit_id', $created[$conv['from']]->id)
                 ->where('to_unit_id', $created[$conv['to']]->id)
                 ->delete();
 
             // Recreate conversion
             UnitConversion::query()->create([
-                'tenant_id' => $tid,
+                'tenant_id' => $tenant->id,
                 'from_unit_id' => $created[$conv['from']]->id,
                 'to_unit_id' => $created[$conv['to']]->id,
                 'factor' => $conv['factor'],

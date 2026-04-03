@@ -50,7 +50,7 @@
                         <div class="col-md-4"><span class="text-muted">Source:</span><br>{{ str_replace('_', ' ', ucfirst($lead->source ?? '')) }}</div>
                         <div class="col-md-4"><span class="text-muted">Industry:</span><br>{{ $lead->industry ?? '—' }}</div>
                         <div class="col-md-4"><span class="text-muted">Assigned To:</span><br>{{ $lead->assignedUser?->name ?? '—' }}</div>
-                        <div class="col-md-4"><span class="text-muted">Created:</span><br>{{ $lead->created_at?->format('Y-m-d H:i') }}</div>
+                        <div class="col-md-4"><span class="text-muted">Created:</span><br>{{ format_datetime($lead->created_at) }}</div>
                         @if($lead->notes)
                         <div class="col-12"><span class="text-muted">Notes:</span><br>{{ $lead->notes }}</div>
                         @endif
@@ -64,7 +64,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Estimated Value:</span>
-                        <span class="fw-bold">{{ number_format((float)$lead->estimated_value, 2) }}</span>
+                        <span class="fw-bold">{{ format_currency((float)$lead->estimated_value) }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Lead Score:</span>
@@ -74,7 +74,7 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Converted At:</span>
-                        <span>{{ $lead->converted_at?->format('Y-m-d H:i') }}</span>
+                        <span>{{ format_datetime($lead->converted_at) }}</span>
                     </div>
                     @if($lead->convertedCustomer)
                     <div class="d-flex justify-content-between">

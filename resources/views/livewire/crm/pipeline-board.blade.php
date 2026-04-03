@@ -44,7 +44,7 @@
                                 <a href="{{ route('crm.opportunities.show', $opp) }}" wire:navigate class="fw-medium small text-primary d-block">{{ $opp->name }}</a>
                                 <div class="text-muted small">{{ $opp->customer?->name }}</div>
                                 <div class="d-flex justify-content-between align-items-center mt-1">
-                                    <span class="fw-bold small">{{ number_format((float)$opp->expected_value, 0) }}</span>
+                                    <span class="fw-bold small">{{ format_currency((float)$opp->expected_value, 0) }}</span>
                                     @if($opp->assignedUser)
                                         <small class="text-muted">{{ $opp->assignedUser->name }}</small>
                                     @endif

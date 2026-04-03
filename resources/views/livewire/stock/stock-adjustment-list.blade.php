@@ -52,7 +52,7 @@
                                 </span>
                             </td>
                             <td>{{ $adj->adjustedBy?->name }}</td>
-                            <td>{{ $adj->adjusted_at?->format('Y-m-d') ?? $adj->created_at->format('Y-m-d') }}</td>
+                            <td>{{ $adj->adjusted_at ? format_date($adj->adjusted_at) : format_date($adj->created_at) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('stock.adjustments.show', $adj) }}"
                                    class="btn btn-sm btn-outline-primary btn-wave" wire:navigate>

@@ -38,7 +38,7 @@
     {{-- Report --}}
     <div class="card custom-card">
         <div class="card-header">
-            <div class="card-title">Trial Balance as of {{ $asOfDate ? \Carbon\Carbon::parse($asOfDate)->format('d M Y') : 'All Time' }}</div>
+            <div class="card-title">Trial Balance as of {{ $asOfDate ? format_date(\Carbon\Carbon::parse($asOfDate), 'd M Y') : 'All Time' }}</div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -63,8 +63,8 @@
                                 @endphp
                                 <span class="badge bg-{{ $typeColors[$row->type] ?? 'secondary' }}-transparent">{{ ucfirst($row->type) }}</span>
                             </td>
-                            <td class="text-end">{{ $row->debit_balance > 0 ? number_format($row->debit_balance, 2) : '' }}</td>
-                            <td class="text-end">{{ $row->credit_balance > 0 ? number_format($row->credit_balance, 2) : '' }}</td>
+                            <td class="text-end">{{ $row->debit_balance > 0 ? format_currency($row->debit_balance) : '' }}</td>
+                            <td class="text-end">{{ $row->credit_balance > 0 ? format_currency($row->credit_balance) : '' }}</td>
                         </tr>
                         @empty
                         <tr>
@@ -76,8 +76,8 @@
                     <tfoot>
                         <tr class="fw-bold table-light">
                             <td colspan="3" class="text-end">Totals:</td>
-                            <td class="text-end">{{ number_format($report['total_debit'], 2) }}</td>
-                            <td class="text-end">{{ number_format($report['total_credit'], 2) }}</td>
+                            <td class="text-end">{{ format_currency($report['total_debit']) }}</td>
+                            <td class="text-end">{{ format_currency($report['total_credit']) }}</td>
                         </tr>
                         <tr>
                             <td colspan="3" class="text-end fw-medium">Balance Check:</td>
@@ -85,7 +85,7 @@
                                 @if(abs($report['total_debit'] - $report['total_credit']) < 0.01)
                                     <span class="badge bg-success-transparent px-3">Balanced</span>
                                 @else
-                                    <span class="badge bg-danger-transparent px-3">Unbalanced ({{ number_format(abs($report['total_debit'] - $report['total_credit']), 2) }})</span>
+                                    <span class="badge bg-danger-transparent px-3">Unbalanced ({{ format_currency(abs($report['total_debit'] - $report['total_credit'])) }})</span>
                                 @endif
                             </td>
                         </tr>

@@ -67,8 +67,8 @@
                             <td><code>{{ $product->sku }}</code></td>
                             <td><span class="badge bg-info-transparent">{{ ucfirst($product->type) }}</span></td>
                             <td>{{ $product->category?->name ?? '—' }}</td>
-                            <td class="text-end">{{ number_format((float) $product->cost_price, 2) }}</td>
-                            <td class="text-end">{{ number_format((float) $product->sell_price, 2) }}</td>
+                            <td class="text-end">{{ format_currency($product->cost_price) }}</td>
+                            <td class="text-end">{{ format_currency($product->sell_price) }}</td>
                             <td>
                                 @if($product->is_active)
                                     <span class="badge bg-success-transparent">Active</span>

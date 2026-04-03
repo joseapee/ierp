@@ -95,7 +95,7 @@
                                             $wastage = (float)($item['wastage_percentage'] ?? 0);
                                             $lineTotal = $qty * $cost * (1 + $wastage / 100);
                                         @endphp
-                                        {{ number_format($lineTotal, 2) }}
+                                        {{ format_currency($lineTotal) }}
                                     </td>
                                     <td class="text-center">
                                         @if(count($items) > 1)
@@ -120,7 +120,7 @@
                                             });
                                             $yieldQty = (float)$yield_quantity ?: 1;
                                         @endphp
-                                        {{ number_format($total / $yieldQty, 2) }}
+                                        {{ format_currency($total / $yieldQty) }}
                                     </td>
                                     <td></td>
                                 </tr>

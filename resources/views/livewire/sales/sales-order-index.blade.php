@@ -52,7 +52,7 @@
                         <tr wire:key="so-{{ $order->id }}">
                             <td><code>{{ $order->order_number }}</code></td>
                             <td>{{ $order->customer?->name }}</td>
-                            <td>{{ $order->order_date?->format('Y-m-d') }}</td>
+                            <td>{{ format_date($order->order_date) }}</td>
                             <td>
                                 @php
                                     $colors = ['draft' => 'warning', 'confirmed' => 'info', 'partially_fulfilled' => 'primary', 'fulfilled' => 'success', 'cancelled' => 'danger'];
@@ -61,7 +61,7 @@
                                     {{ str_replace('_', ' ', ucfirst($order->status)) }}
                                 </span>
                             </td>
-                            <td class="text-end">{{ number_format((float)$order->total_amount, 2) }}</td>
+                            <td class="text-end">{{ format_currency($order->total_amount) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('sales.orders.show', $order) }}"
                                    class="btn btn-sm btn-outline-primary btn-wave" wire:navigate>

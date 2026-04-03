@@ -61,7 +61,8 @@
                                     @can('roles.edit')
                                     <button class="btn btn-sm btn-outline-info btn-wave"
                                             wire:click="$dispatch('openRoleFormModal', { roleId: {{ $role->id }} })"
-                                            data-bs-toggle="tooltip" title="Edit role">
+                                            @if($role->is_system) disabled @endif
+                                            data-bs-toggle="tooltip" title="{{ $role->is_system ? 'System roles cannot be edited' : 'Edit role' }}">
                                         <i class="ri-edit-line"></i>
                                     </button>
                                     @endcan

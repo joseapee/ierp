@@ -31,7 +31,7 @@
                         <div class="col-sm-3"><span class="text-muted">Entry #</span></div>
                         <div class="col-sm-9"><code>{{ $entry->entry_number }}</code></div>
                         <div class="col-sm-3"><span class="text-muted">Date</span></div>
-                        <div class="col-sm-9">{{ $entry->date->format('d M Y') }}</div>
+                        <div class="col-sm-9">{{ format_date($entry->date, 'd M Y') }}</div>
                         <div class="col-sm-3"><span class="text-muted">Description</span></div>
                         <div class="col-sm-9">{{ $entry->description }}</div>
                         <div class="col-sm-3"><span class="text-muted">Reference</span></div>
@@ -61,7 +61,7 @@
                     @if($entry->posted_at)
                     <div class="mb-2">
                         <small class="text-muted d-block">Posted</small>
-                        <span>{{ $entry->posted_at->format('d M Y H:i') }}</span>
+                        <span>{{ format_datetime($entry->posted_at, 'd M Y H:i') }}</span>
                         @if($entry->postedByUser)
                             <small class="text-muted">by {{ $entry->postedByUser->name }}</small>
                         @endif
@@ -70,7 +70,7 @@
                     @if($entry->voided_at)
                     <div class="mb-2">
                         <small class="text-muted d-block">Voided</small>
-                        <span>{{ $entry->voided_at->format('d M Y H:i') }}</span>
+                        <span>{{ format_datetime($entry->voided_at, 'd M Y H:i') }}</span>
                         @if($entry->voidedByUser)
                             <small class="text-muted">by {{ $entry->voidedByUser->name }}</small>
                         @endif
@@ -109,16 +109,16 @@
                                 <span class="ms-1">{{ $line->account->name }}</span>
                             </td>
                             <td>{{ $line->description ?? '—' }}</td>
-                            <td class="text-end">{{ (float) $line->debit > 0 ? number_format((float) $line->debit, 2) : '' }}</td>
-                            <td class="text-end">{{ (float) $line->credit > 0 ? number_format((float) $line->credit, 2) : '' }}</td>
+                            <td class="text-end">{{ (float) $line->debit > 0 ? format_currency((float) $line->debit) : '' }}</td>
+                            <td class="text-end">{{ (float) $line->credit > 0 ? format_currency((float) $line->credit) : '' }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr class="fw-bold">
                             <td colspan="2" class="text-end">Totals:</td>
-                            <td class="text-end">{{ number_format((float) $entry->lines->sum('debit'), 2) }}</td>
-                            <td class="text-end">{{ number_format((float) $entry->lines->sum('credit'), 2) }}</td>
+                            <td class="text-end">{{ format_currency((float) $entry->lines->sum('debit')) }}</td>
+                            <td class="text-end">{{ format_currency((float) $entry->lines->sum('credit')) }}</td>
                         </tr>
                     </tfoot>
                 </table>

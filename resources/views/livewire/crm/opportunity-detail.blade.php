@@ -44,9 +44,9 @@
                         </div>
                         <div class="col-md-4"><span class="text-muted">Contact:</span><br>{{ $opportunity->contact?->full_name ?? '—' }}</div>
                         <div class="col-md-4"><span class="text-muted">Assigned To:</span><br>{{ $opportunity->assignedUser?->name ?? '—' }}</div>
-                        <div class="col-md-4"><span class="text-muted">Expected Close:</span><br>{{ $opportunity->expected_close_date?->format('Y-m-d') ?? '—' }}</div>
+                        <div class="col-md-4"><span class="text-muted">Expected Close:</span><br>{{ $opportunity->expected_close_date ? format_date($opportunity->expected_close_date) : '—' }}</div>
                         @if($opportunity->closed_at)
-                        <div class="col-md-4"><span class="text-muted">Closed At:</span><br>{{ $opportunity->closed_at->format('Y-m-d H:i') }}</div>
+                        <div class="col-md-4"><span class="text-muted">Closed At:</span><br>{{ format_datetime($opportunity->closed_at) }}</div>
                         @endif
                         @if($opportunity->lost_reason)
                         <div class="col-12"><span class="text-muted">Lost Reason:</span><br>{{ $opportunity->lost_reason }}</div>
@@ -75,7 +75,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Expected Value:</span>
-                        <span class="fw-bold">{{ number_format((float)$opportunity->expected_value, 2) }}</span>
+                        <span class="fw-bold">{{ format_currency((float)$opportunity->expected_value) }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Probability:</span>
@@ -84,7 +84,7 @@
                     <hr>
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Weighted Value:</span>
-                        <span>{{ number_format((float)$opportunity->weighted_value, 2) }}</span>
+                        <span>{{ format_currency((float)$opportunity->weighted_value) }}</span>
                     </div>
                 </div>
             </div>

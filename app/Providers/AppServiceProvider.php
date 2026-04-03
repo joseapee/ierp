@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Role;
 use App\Models\StockAdjustment;
 use App\Models\Tenant;
+use App\Models\UnitConversion;
 use App\Models\User;
 use App\Models\Warehouse;
 use App\Policies\BrandPolicy;
@@ -17,6 +18,7 @@ use App\Policies\ProductPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\StockAdjustmentPolicy;
 use App\Policies\TenantPolicy;
+use App\Policies\UnitConversionPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\WarehousePolicy;
 use Illuminate\Support\Facades\Event;
@@ -72,5 +74,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Product::class, ProductPolicy::class);
         Gate::policy(Warehouse::class, WarehousePolicy::class);
         Gate::policy(StockAdjustment::class, StockAdjustmentPolicy::class);
+        Gate::policy(UnitConversion::class, UnitConversionPolicy::class);
     }
 }

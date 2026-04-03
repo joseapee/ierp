@@ -59,7 +59,7 @@
                                 <span class="badge bg-{{ $color }}-transparent">{{ str_replace('_', ' ', ucfirst($transfer->status)) }}</span>
                             </td>
                             <td>{{ $transfer->initiatedBy?->name }}</td>
-                            <td>{{ $transfer->created_at->format('Y-m-d') }}</td>
+                            <td>{{ format_date($transfer->created_at) }}</td>
                             <td class="text-end">
                                 <a href="{{ route('stock.transfers.show', $transfer) }}"
                                    class="btn btn-sm btn-outline-primary btn-wave" wire:navigate>

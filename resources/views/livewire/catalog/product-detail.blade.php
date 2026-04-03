@@ -70,11 +70,11 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">Cost Price</span>
-                            <span>{{ number_format((float) $product->cost_price, 4) }}</span>
+                            <span>{{ format_currency($product->cost_price, 4) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">Sell Price</span>
-                            <span>{{ number_format((float) $product->sell_price, 4) }}</span>
+                            <span>{{ format_currency($product->sell_price, 4) }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">Tax Rate</span>
@@ -143,8 +143,8 @@
                                             <span class="badge bg-outline-secondary">{{ $av->attribute->name }}: {{ $av->value }}</span>
                                         @endforeach
                                     </td>
-                                    <td class="text-end">{{ number_format((float) ($variant->cost_price_override ?? $product->cost_price), 2) }}</td>
-                                    <td class="text-end">{{ number_format((float) ($variant->sell_price_override ?? $product->sell_price), 2) }}</td>
+                                    <td class="text-end">{{ format_currency($variant->cost_price_override ?? $product->cost_price) }}</td>
+                                    <td class="text-end">{{ format_currency($variant->sell_price_override ?? $product->sell_price) }}</td>
                                     <td>
                                         @if($variant->is_active)
                                             <span class="badge bg-success-transparent">Active</span>
@@ -189,7 +189,7 @@
                                     <td><code>{{ $batch->batch_number ?? '—' }}</code></td>
                                     <td>{{ $batch->warehouse?->name }}</td>
                                     <td class="text-end">{{ number_format((float) $batch->remaining_quantity, 2) }}</td>
-                                    <td>{{ $batch->expiry_date?->format('Y-m-d') ?? '—' }}</td>
+                                    <td>{{ $batch->expiry_date ? format_date($batch->expiry_date) : '—' }}</td>
                                     <td><span class="badge bg-{{ $batch->status === 'available' ? 'success' : 'warning' }}-transparent">{{ ucfirst($batch->status) }}</span></td>
                                 </tr>
                                 @empty
