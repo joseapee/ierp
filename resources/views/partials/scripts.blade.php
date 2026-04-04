@@ -34,15 +34,39 @@
 <div class="modal fade" id="header-responsive-search" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body">
-                <div class="input-group">
+            <div class="modal-body" x-data="headerSearch()" @keydown.escape.window="close()">
+                <div class="input-group mb-2">
                     <input type="text"
                            class="form-control border-end-0"
-                           placeholder="Search..."
-                           aria-label="Search">
+                           placeholder="Search pages & features..."
+                           aria-label="Search"
+                           x-model="query"
+                           @input="search()"
+                           @keydown.arrow-down.prevent="moveDown()"
+                           @keydown.arrow-up.prevent="moveUp()"
+                           @keydown.enter.prevent="goToSelected()">
                     <button class="btn btn-primary" type="button">
                         <i class="bi bi-search"></i>
                     </button>
+                </div>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <template x-for="(item, index) in results" :key="item.url">
+                        <a :href="item.url"
+                           class="d-flex align-items-center gap-2 px-3 py-2 text-decoration-none border-bottom search-result-item"
+                           :class="{ 'bg-primary-transparent': selectedIndex === index }"
+                           @mouseenter="selectedIndex = index"
+                           wire:navigate>
+                            <i class="ri-arrow-right-s-line text-muted fs-16"></i>
+                            <div>
+                                <span class="d-block fw-medium fs-14" x-text="item.label"></span>
+                                <span class="d-block fs-12 text-muted" x-text="item.category"></span>
+                            </div>
+                        </a>
+                    </template>
+                    <div x-show="query.length > 0 && results.length === 0" class="px-3 py-3 text-center text-muted fs-13">
+                        <i class="ri-search-line fs-20 d-block mb-1"></i>
+                        No pages found
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,6 +74,46 @@
 </div>
 
 <script data-navigate-once>
+    /**
+     * Dark / Light mode toggle.
+     */
+    document.addEventListener('DOMContentLoaded', function () {
+        initThemeToggle();
+    });
+    document.addEventListener('livewire:navigated', function () {
+        initThemeToggle();
+    });
+
+    function initThemeToggle() {
+        document.querySelectorAll('.layout-setting').forEach(function (btn) {
+            // Remove old listeners by replacing node
+            var clone = btn.cloneNode(true);
+            btn.parentNode.replaceChild(clone, btn);
+
+            clone.addEventListener('click', function (e) {
+                e.preventDefault();
+                var html = document.documentElement;
+                var isDark = html.getAttribute('data-theme-mode') === 'dark';
+
+                if (isDark) {
+                    html.setAttribute('data-theme-mode', 'light');
+                    html.setAttribute('data-header-styles', 'light');
+                    html.setAttribute('data-menu-styles', 'light');
+                    localStorage.removeItem('vyzordarktheme');
+                    localStorage.removeItem('vyzorHeader');
+                    localStorage.removeItem('vyzorMenu');
+                } else {
+                    html.setAttribute('data-theme-mode', 'dark');
+                    html.setAttribute('data-header-styles', 'transparent');
+                    html.setAttribute('data-menu-styles', 'transparent');
+                    localStorage.setItem('vyzordarktheme', 'true');
+                    localStorage.setItem('vyzorHeader', 'transparent');
+                    localStorage.setItem('vyzorMenu', 'transparent');
+                }
+            });
+        });
+    }
+
     /**
      * Re-initialise Bootstrap tooltips on every Livewire SPA navigation.
      */
@@ -94,6 +158,93 @@
                     background: colors[data.type] || colors.info,
                 },
             }).showToast();
+        });
+    });
+</script>
+
+{{-- Header search Alpine component --}}
+<script data-navigate-once>
+    document.addEventListener('alpine:init', function () {
+        Alpine.data('headerSearch', function () {
+            return {
+                query: '',
+                results: [],
+                open: false,
+                selectedIndex: 0,
+                pages: [],
+
+                init() {
+                    this.pages = this.buildPageIndex();
+                },
+
+                buildPageIndex() {
+                    var items = [];
+                    var menuItems = document.querySelectorAll('#sidebar .slide:not(.slide__category)');
+                    menuItems.forEach(function (li) {
+                        var link = li.querySelector('.side-menu__item');
+                        var label = li.querySelector('.side-menu__label');
+                        if (link && label) {
+                            var category = '';
+                            var prev = li.previousElementSibling;
+                            while (prev) {
+                                if (prev.classList.contains('slide__category')) {
+                                    var catName = prev.querySelector('.category-name');
+                                    if (catName) {
+                                        category = catName.textContent.trim();
+                                    }
+                                    break;
+                                }
+                                prev = prev.previousElementSibling;
+                            }
+                            items.push({
+                                label: label.textContent.trim(),
+                                url: link.getAttribute('href'),
+                                category: category
+                            });
+                        }
+                    });
+                    return items;
+                },
+
+                search() {
+                    var q = this.query.toLowerCase().trim();
+                    if (q.length === 0) {
+                        this.results = [];
+                        this.open = false;
+                        return;
+                    }
+                    var words = q.split(/\s+/);
+                    this.results = this.pages.filter(function (page) {
+                        var text = (page.label + ' ' + page.category).toLowerCase();
+                        return words.every(function (w) { return text.indexOf(w) !== -1; });
+                    });
+                    this.selectedIndex = 0;
+                    this.open = true;
+                },
+
+                close() {
+                    this.open = false;
+                },
+
+                moveDown() {
+                    if (this.selectedIndex < this.results.length - 1) {
+                        this.selectedIndex++;
+                    }
+                },
+
+                moveUp() {
+                    if (this.selectedIndex > 0) {
+                        this.selectedIndex--;
+                    }
+                },
+
+                goToSelected() {
+                    if (this.results.length > 0 && this.results[this.selectedIndex]) {
+                        window.location.href = this.results[this.selectedIndex].url;
+                        this.close();
+                    }
+                }
+            };
         });
     });
 </script>

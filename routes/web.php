@@ -34,6 +34,7 @@ use App\Livewire\Crm\OpportunityForm;
 use App\Livewire\Crm\OpportunityIndex;
 use App\Livewire\Crm\PipelineBoard;
 use App\Livewire\Crm\PipelineStageManager;
+use App\Livewire\Dashboard;
 use App\Livewire\Manufacturing\BomList;
 use App\Livewire\Manufacturing\ProductionBoard;
 use App\Livewire\Manufacturing\ProductionOrderDetail;
@@ -89,7 +90,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     // ── All routes below require completed setup (tenant created) ──
     Route::middleware('setup.complete')->group(function (): void {
 
-        Route::get('/dashboard', fn () => view('dashboard'))->name('dashboard');
+        Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
         // User Management
         Route::middleware('permission:users.view')

@@ -24,16 +24,56 @@
                 </a>
             </div>
 
-            <div class="header-element header-search header-search-content d-md-block d-none">
+            <div class="header-element header-search header-search-content d-md-block d-none"
+                 x-data="headerSearch()"
+                 @click.outside="close()"
+                 @keydown.escape.window="close()">
                 <input type="text"
                        class="header-search-bar form-control bg-white"
                        id="header-search"
-                       placeholder="Search"
+                       placeholder="Search pages & features..."
                        spellcheck="false"
-                       autocomplete="off">
+                       autocomplete="off"
+                       x-model="query"
+                       @input="search()"
+                       @focus="open = query.length > 0"
+                       @keydown.arrow-down.prevent="moveDown()"
+                       @keydown.arrow-up.prevent="moveUp()"
+                       @keydown.enter.prevent="goToSelected()">
                 <a href="javascript:void(0);" class="header-search-icon border-0">
                     <i class="bi bi-search fs-12 mb-1"></i>
                 </a>
+
+                {{-- Search results dropdown --}}
+                <div class="header-search-dropdown position-absolute bg-white border rounded-3 shadow-lg mt-1 w-100"
+                     x-show="open && results.length > 0"
+                     x-cloak
+                     style="z-index: 1050; max-height: 360px; overflow-y: auto; top: 100%; left: 0;">
+                    <template x-for="(item, index) in results" :key="item.url">
+                        <a :href="item.url"
+                           class="d-flex align-items-center gap-2 px-3 py-2 text-decoration-none border-bottom search-result-item"
+                           :class="{ 'bg-primary-transparent': selectedIndex === index }"
+                           @mouseenter="selectedIndex = index"
+                           wire:navigate>
+                            <i class="ri-arrow-right-s-line text-muted fs-16"></i>
+                            <div>
+                                <span class="d-block fw-medium fs-14 text-dark" x-text="item.label"></span>
+                                <span class="d-block fs-12 text-muted" x-text="item.category"></span>
+                            </div>
+                        </a>
+                    </template>
+                </div>
+
+                {{-- No results --}}
+                <div class="header-search-dropdown position-absolute bg-white border rounded-3 shadow-lg mt-1 w-100"
+                     x-show="open && query.length > 0 && results.length === 0"
+                     x-cloak
+                     style="z-index: 1050; top: 100%; left: 0;">
+                    <div class="px-3 py-3 text-center text-muted fs-13">
+                        <i class="ri-search-line fs-20 d-block mb-1"></i>
+                        No pages found
+                    </div>
+                </div>
             </div>
 
         </div>

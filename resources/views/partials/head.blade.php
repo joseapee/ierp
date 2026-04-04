@@ -26,6 +26,21 @@
 {{-- Toastify CSS --}}
 <link href="{{ asset('vyzor/libs/toastify-js/src/toastify.css') }}" rel="stylesheet">
 
+{{-- Header search dropdown styles --}}
+<style>
+    [data-theme-mode="dark"] .header-search-dropdown {
+        background-color: var(--custom-white) !important;
+        border-color: var(--default-border) !important;
+    }
+    [data-theme-mode="dark"] .header-search-dropdown .text-dark {
+        color: #fff !important;
+    }
+    .header-search-dropdown .search-result-item:hover {
+        background-color: rgba(var(--primary-rgb), 0.1);
+    }
+    [x-cloak] { display: none !important; }
+</style>
+
 @livewireStyles
 
 @stack('styles')
