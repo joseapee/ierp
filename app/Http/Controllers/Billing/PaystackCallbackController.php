@@ -36,15 +36,28 @@ class PaystackCallbackController extends Controller
         if ($subscriptionId) {
             $subscription = Subscription::query()->find($subscriptionId);
 
-            if ($subscription && in_array($subscription->status, ['trial', 'past_due', 'grace_period'])) {
-                $subscriptionService->activate($subscription, [
+            if ($subscription) {
+                $paymentInfo = [
                     'reference' => $data['reference'],
                     'transaction_id' => (string) ($data['id'] ?? ''),
                     'authorization_code' => $data['authorization']['authorization_code'] ?? null,
                     'customer_code' => $data['customer']['customer_code'] ?? null,
                     'amount' => ($data['amount'] ?? 0) / 100,
                     'method' => $data['channel'] ?? 'card',
-                ]);
+                ];
+
+                $isRenewal = ($metadata['type'] ?? '') === 'renewal';
+
+                if ($isRenewal && $subscription->status === 'active') {
+                    $subscriptionService->renew($subscription, $paymentInfo);
+
+                    return redirect()->route('billing.index')
+                        ->with('success', 'Renewal successful! Your subscription has been extended.');
+                }
+
+                if (in_array($subscription->status, ['trial', 'past_due', 'grace_period'])) {
+                    $subscriptionService->activate($subscription, $paymentInfo);
+                }
             }
         }
 

@@ -72,7 +72,19 @@
                     @endif
                 </div>
                 @if($subscription && $subscription->isActive() && $subscription->status !== 'cancelled')
-                    <div class="card-footer">
+                    <div class="card-footer d-flex gap-2 flex-wrap">
+                        @if($subscription->status === 'active')
+                            <button class="btn btn-sm btn-primary btn-wave"
+                                    wire:click="initiateRenewal"
+                                    wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="initiateRenewal">
+                                    <i class="ri-refresh-line me-1"></i> Renew Now
+                                </span>
+                                <span wire:loading wire:target="initiateRenewal">
+                                    <i class="ri-loader-4-line me-1 spin"></i> Processing...
+                                </span>
+                            </button>
+                        @endif
                         <button class="btn btn-sm btn-outline-danger btn-wave"
                                 wire:click="cancelSubscription"
                                 wire:confirm="Are you sure you want to cancel your subscription?">

@@ -75,12 +75,67 @@
 
 <script data-navigate-once>
     /**
-     * Dark / Light mode toggle.
+     * Re-bind the sidebar toggle button after Livewire SPA navigation.
+     *
+     * defaultmenu.min.js runs once (data-navigate-once) and captures DOM
+     * references at load time. After wire:navigate the header is replaced
+     * so the click listener on .sidemenu-toggle is lost.
      */
+    function initSidemenuToggle() {
+        var btn = document.querySelector('.sidemenu-toggle');
+        if (!btn || typeof toggleSidemenu !== 'function') {
+            return;
+        }
+        // Refresh the mainContentDiv reference used by defaultmenu.min.js
+        mainContentDiv = document.querySelector('.main-content');
+
+        // Replace the node to strip any stale listeners, then attach fresh one
+        var clone = btn.cloneNode(true);
+        btn.parentNode.replaceChild(clone, btn);
+        clone.addEventListener('click', toggleSidemenu);
+
+        // Re-bind the main-content click → close sidebar on mobile
+        if (mainContentDiv) {
+            if (window.innerWidth <= 992) {
+                mainContentDiv.addEventListener('click', menuClose);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initSidemenuToggle);
+    document.addEventListener('livewire:navigated', function () {
+        initSidemenuToggle();
+
+        // Auto-close the sidebar on mobile after navigating to a new page
+        if (window.innerWidth < 992) {
+            document.documentElement.setAttribute('data-toggled', 'close');
+            var overlay = document.querySelector('#responsive-overlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+    });
+
+    /**
+     * Restore dark/light mode from localStorage.
+     * Called on every Livewire navigation because the server always sends
+     * data-theme-mode="light" on the <html> tag and main.js only runs once.
+     */
+    function restoreThemeFromStorage() {
+        var html = document.documentElement;
+        if (localStorage.getItem('vyzordarktheme')) {
+            html.setAttribute('data-theme-mode', 'dark');
+            html.setAttribute('data-header-styles', localStorage.getItem('vyzorHeader') || 'transparent');
+            html.setAttribute('data-menu-styles', localStorage.getItem('vyzorMenu') || 'transparent');
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        restoreThemeFromStorage();
         initThemeToggle();
     });
     document.addEventListener('livewire:navigated', function () {
+        restoreThemeFromStorage();
         initThemeToggle();
     });
 

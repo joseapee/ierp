@@ -7,6 +7,18 @@
 {{-- Vyzor theme config must load before CSS --}}
 <script src="{{ asset('vyzor/js/main.js') }}" data-navigate-once></script>
 
+{{-- Restore dark mode from localStorage on every navigation to prevent flash --}}
+<script>
+    (function () {
+        if (localStorage.getItem('vyzordarktheme')) {
+            var h = document.documentElement;
+            h.setAttribute('data-theme-mode', 'dark');
+            h.setAttribute('data-header-styles', localStorage.getItem('vyzorHeader') || 'transparent');
+            h.setAttribute('data-menu-styles', localStorage.getItem('vyzorMenu') || 'transparent');
+        }
+    })();
+</script>
+
 {{-- Bootstrap CSS --}}
 <link id="style" href="{{ asset('vyzor/libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
